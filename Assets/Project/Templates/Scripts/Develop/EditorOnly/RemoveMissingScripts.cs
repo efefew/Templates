@@ -10,7 +10,7 @@ public class RemoveMissingScripts
     [MenuItem("Tools/RemoveMissingScripts")]
     public static void StartRemoveMissingScripts() => FindAll();
 
-    [MenuItem("Assets/清理选中GameObject中丢失的引用.", priority = -100)]
+    //[MenuItem("Assets/清理选中GameObject中丢失的引用.", priority = -100)]
     private static void FindInSelected()
     {
         GameObject[] _go = Selection.gameObjects;
@@ -24,7 +24,7 @@ public class RemoveMissingScripts
 
             _cur++;
 
-            EditorUtility.DisplayCancelableProgressBar("Processing...", $"{_cur + 1}/{_count}", (float)_cur / _count);
+            _ = EditorUtility.DisplayCancelableProgressBar("Processing...", $"{_cur + 1}/{_count}", (float)_cur / _count);
         }
 
         EditorUtility.ClearProgressBar();
@@ -54,7 +54,7 @@ public class RemoveMissingScripts
 
             _cur++;
 
-            EditorUtility.DisplayCancelableProgressBar("Processing...", $"{_cur + 1}/{_count}", (float)_cur / _count);
+            _ = EditorUtility.DisplayCancelableProgressBar("Processing...", $"{_cur + 1}/{_count}", (float)_cur / _count);
         }
 
         EditorUtility.ClearProgressBar();
@@ -96,7 +96,7 @@ public class RemoveMissingScripts
 
     private static void RemoveRecursively(GameObject _gameObject)
     {
-        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(_gameObject);
+        _ = GameObjectUtility.RemoveMonoBehavioursWithMissingScript(_gameObject);
 
         foreach (Transform _transform in _gameObject.transform)
         {

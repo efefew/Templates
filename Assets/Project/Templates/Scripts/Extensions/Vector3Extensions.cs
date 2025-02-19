@@ -2,19 +2,91 @@
 
 public static class Vector3Extensions
 {
-    #region Public Methods
+    #region Add
 
-    public static void AddAngleX(this Transform tr, float x) => tr.eulerAngles = tr.eulerAngles.AddX(x);
+    public static Transform AddAngleX(this Transform tr, float x, bool local = false)
+    {
+        if (local)
+        {
+            tr.localEulerAngles = tr.localEulerAngles.AddX(x);
+        }
+        else
+        {
+            tr.eulerAngles = tr.eulerAngles.AddX(x);
+        }
 
-    public static void AddAngleY(this Transform tr, float y) => tr.eulerAngles = tr.eulerAngles.AddY(y);
+        return tr;
+    }
 
-    public static void AddAngleZ(this Transform tr, float z) => tr.eulerAngles = tr.eulerAngles.AddZ(z);
+    public static Transform AddAngleY(this Transform tr, float y, bool local = false)
+    {
+        if (local)
+        {
+            tr.localEulerAngles = tr.localEulerAngles.AddY(y);
+        }
+        else
+        {
+            tr.eulerAngles = tr.eulerAngles.AddY(y);
+        }
 
-    public static void AddPositionX(this Transform tr, float x) => tr.position = tr.position.AddX(x);
+        return tr;
+    }
 
-    public static void AddPositionY(this Transform tr, float y) => tr.position = tr.position.AddY(y);
+    public static Transform AddAngleZ(this Transform tr, float z, bool local = false)
+    {
+        if (local)
+        {
+            tr.localEulerAngles = tr.localEulerAngles.AddZ(z);
+        }
+        else
+        {
+            tr.eulerAngles = tr.eulerAngles.AddZ(z);
+        }
 
-    public static void AddPositionZ(this Transform tr, float z) => tr.position = tr.position.AddZ(z);
+        return tr;
+    }
+
+    public static Transform AddPositionX(this Transform tr, float x, bool local = false)
+    {
+        if (local)
+        {
+            tr.localPosition = tr.localPosition.AddX(x);
+        }
+        else
+        {
+            tr.position = tr.position.AddX(x);
+        }
+
+        return tr;
+    }
+
+    public static Transform AddPositionY(this Transform tr, float y, bool local = false)
+    {
+        if (local)
+        {
+            tr.localPosition = tr.localPosition.AddY(y);
+        }
+        else
+        {
+            tr.position = tr.position.AddY(y);
+        }
+
+        return tr;
+    }
+
+    public static Transform AddPositionZ(this Transform tr, float z, bool local = false)
+    {
+        if (local)
+        {
+            tr.localPosition = tr.localPosition.AddZ(z);
+        }
+        else
+        {
+            tr.position = tr.position.AddZ(z);
+        }
+
+        return tr;
+    }
 
     public static Vector3 AddX(this Vector3 vector, float x) => new(vector.x + x, vector.y, vector.z);
 
@@ -22,17 +94,93 @@ public static class Vector3Extensions
 
     public static Vector3 AddZ(this Vector3 vector, float z) => new(vector.x, vector.y, vector.z + z);
 
-    public static void SetAngleX(this Transform tr, float x) => tr.eulerAngles = tr.eulerAngles.SetX(x);
+    #endregion Add
 
-    public static void SetAngleY(this Transform tr, float y) => tr.eulerAngles = tr.eulerAngles.SetY(y);
+    #region Set
 
-    public static void SetAngleZ(this Transform tr, float z) => tr.eulerAngles = tr.eulerAngles.SetZ(z);
+    public static Transform SetAngleX(this Transform tr, float x, bool local = false)
+    {
+        if (local)
+        {
+            tr.localEulerAngles = tr.localEulerAngles.SetX(x);
+        }
+        else
+        {
+            tr.eulerAngles = tr.eulerAngles.SetX(x);
+        }
 
-    public static void SetPositionX(this Transform tr, float x) => tr.position = tr.position.SetX(x);
+        return tr;
+    }
 
-    public static void SetPositionY(this Transform tr, float y) => tr.position = tr.position.SetY(y);
+    public static Transform SetAngleY(this Transform tr, float y, bool local = false)
+    {
+        if (local)
+        {
+            tr.localEulerAngles = tr.localEulerAngles.SetY(y);
+        }
+        else
+        {
+            tr.eulerAngles = tr.eulerAngles.SetY(y);
+        }
 
-    public static void SetPositionZ(this Transform tr, float z) => tr.position = tr.position.SetZ(z);
+        return tr;
+    }
+
+    public static Transform SetAngleZ(this Transform tr, float z, bool local = false)
+    {
+        if (local)
+        {
+            tr.localEulerAngles = tr.localEulerAngles.SetZ(z);
+        }
+        else
+        {
+            tr.eulerAngles = tr.eulerAngles.SetZ(z);
+        }
+
+        return tr;
+    }
+
+    public static Transform SetPositionX(this Transform tr, float x, bool local = false)
+    {
+        if (local)
+        {
+            tr.localPosition = tr.localPosition.SetX(x);
+        }
+        else
+        {
+            tr.position = tr.position.SetX(x);
+        }
+
+        return tr;
+    }
+
+    public static Transform SetPositionY(this Transform tr, float y, bool local = false)
+    {
+        if (local)
+        {
+            tr.localPosition = tr.localPosition.SetY(y);
+        }
+        else
+        {
+            tr.position = tr.position.SetY(y);
+        }
+
+        return tr;
+    }
+
+    public static Transform SetPositionZ(this Transform tr, float z, bool local = false)
+    {
+        if (local)
+        {
+            tr.localPosition = tr.localPosition.SetZ(z);
+        }
+        else
+        {
+            tr.position = tr.position.SetZ(z);
+        }
+
+        return tr;
+    }
 
     public static Vector2 SetX(this Vector2 vector, float x) => new(x, vector.y);
 
@@ -44,5 +192,5 @@ public static class Vector3Extensions
 
     public static Vector3 SetZ(this Vector3 vector, float z) => new(vector.x, vector.y, z);
 
-    #endregion Public Methods
+    #endregion Set
 }

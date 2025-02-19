@@ -26,6 +26,18 @@ public static class SaveManager
         PlayerPrefs.SetString(key, JsonUtility.ToJson(save));
     }
 }
+#region ControllerData
+[Serializable]
+public class CameraControllerData
+{
+
+}
+[Serializable]
+public class PlayerControllerData
+{
+
+}
+#endregion ControllerData
 [Serializable]
 public class SettingData
 {

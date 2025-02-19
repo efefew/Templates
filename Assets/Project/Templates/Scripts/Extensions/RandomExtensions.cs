@@ -53,4 +53,29 @@ public static class RandomExtensions
 
         return result;
     }
+    public static T CardDraw<T>(ref List<T> cards)
+    {
+        if (cards.Count == 0)
+        {
+            return default;
+        }
+
+        int id = Random.Range(0, cards.Count);
+        T card = cards[id];
+        cards.RemoveAt(id);
+        return card;
+    }
+    public static T CardDrawProbability<T>(ref List<T> cards, List<float> probabilities)
+    {
+        if (cards.Count == 0)
+        {
+            return default;
+        }
+
+        int id = Probability(probabilities);
+        T card = cards[id];
+        cards.RemoveAt(id);
+        return card;
+    }
+    public static int Positive() => Random.Range(0, 2) == 1 ? 1 : -1;
 }
