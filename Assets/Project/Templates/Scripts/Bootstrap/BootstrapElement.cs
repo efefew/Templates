@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public abstract class BootstrapElement : MonoBehaviour
+public interface BootstrapElement
 {
     public abstract void StartBootstrap();
 }

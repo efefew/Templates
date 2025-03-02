@@ -2,6 +2,54 @@
 
 public static class Vector3Extensions
 {
+    public static Vector3 Forward(this Transform tr, Vector3 angle, float scale)
+    {
+        Quaternion quaternion = tr.rotation;
+        tr.eulerAngles = angle;
+        Vector3 vector = tr.forward * scale;
+        tr.rotation = quaternion;
+        return vector;
+    }
+    public static Vector3 Up(this Transform tr, Vector3 angle, float scale)
+    {
+        Quaternion quaternion = tr.rotation;
+        tr.eulerAngles = angle;
+        Vector3 vector = tr.up * scale;
+        tr.rotation = quaternion;
+        return vector;
+    }
+    public static Vector3 Right(this Transform tr, Vector3 angle, float scale)
+    {
+        Quaternion quaternion = tr.rotation;
+        tr.eulerAngles = angle;
+        Vector3 vector = tr.right * scale;
+        tr.rotation = quaternion;
+        return vector;
+    }
+    public static Vector3 Forward(this Transform tr, Quaternion angle, float scale)
+    {
+        Quaternion quaternion = tr.rotation;
+        tr.rotation = angle;
+        Vector3 vector = tr.forward * scale;
+        tr.rotation = quaternion;
+        return vector;
+    }
+    public static Vector3 Up(this Transform tr, Quaternion angle, float scale)
+    {
+        Quaternion quaternion = tr.rotation;
+        tr.rotation = angle;
+        Vector3 vector = tr.up * scale;
+        tr.rotation = quaternion;
+        return vector;
+    }
+    public static Vector3 Right(this Transform tr, Quaternion angle, float scale)
+    {
+        Quaternion quaternion = tr.rotation;
+        tr.rotation = angle;
+        Vector3 vector = tr.right * scale;
+        tr.rotation = quaternion;
+        return vector;
+    }
     #region Add
 
     public static Transform AddAngleX(this Transform tr, float x, bool local = false)

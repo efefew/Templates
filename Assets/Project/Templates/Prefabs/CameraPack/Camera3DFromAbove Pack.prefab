@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e66c86621efb6b848990bb3729c2ac10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bootstrapElements:
+  _elements:
   - {fileID: 2756123778174348254}
   - {fileID: 3237483736590391112}
 --- !u!1 &5288303107273851957

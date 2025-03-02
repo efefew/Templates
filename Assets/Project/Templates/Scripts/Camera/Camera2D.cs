@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
-public class Camera2D : MonoBehaviour
+public class Camera2D : CameraOperator
 {
 
     private Transform _tr;
@@ -19,8 +19,9 @@ public class Camera2D : MonoBehaviour
 
     #region Unity Methods
 
-    private void Start()
+    public override void StartBootstrap()
     {
+        base.StartBootstrap();
         _camera = GetComponent<Camera>();
         _tr = transform;
         _tr.position = new Vector3(13, 11, -10);
@@ -87,6 +88,12 @@ public class Camera2D : MonoBehaviour
             }
         }
     }
+
+    protected override void CameraUpdate() => throw new System.NotImplementedException();
+    protected override void Move(Vector2 position) => throw new System.NotImplementedException();
+    protected override void Rotate(float scaleRotation) => throw new System.NotImplementedException();
+    protected override void Zoom(float scaleZoom) => throw new System.NotImplementedException();
+    protected override void ResetCamera() => throw new System.NotImplementedException();
 
     #endregion Unity Methods
 }

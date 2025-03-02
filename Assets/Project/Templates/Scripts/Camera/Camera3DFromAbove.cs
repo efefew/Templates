@@ -3,54 +3,35 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
-public class Camera3DFromAbove : BootstrapElement
+public class Camera3DFromAbove : CameraOperator
 {
-    public static event Action OnUpdateMove, OnUpdateRotate;
+    public event Action OnUpdateMove, OnUpdateRotate, OnUpdateZoom, OnReset;
 
     private const float MIN_DELTA = 0.1f;
     private const int CIRCLE_ANGLE = 360;
-    private Controller _controller;
     [SerializeField]
     private Transform _target;
 
     [SerializeField]
-    private float _speedMove = 3, _speedRotate = 1, _speedZoom = 1, _zoomMin = 100, _zoomMax = 200, _lerpMove = 0.01f, _lerpRotate = 0.01f, _distanceZ = 5, _angleX = 30;
-
+    private float _distanceZ = 5, _angleX = 30, _zoomDistance = 1f;
+    [SerializeField]
+    private float _defaultAngleY, _defaultZoom;
     private float _targetAngleY = 0;
-    private Transform _trCamera;
 
-    #region Unity Methods
-    public override void StartBootstrap()
+    public override void StartBootstrap() => base.StartBootstrap();
+    protected override void CameraUpdate()
     {
-        _controller = Controller.Instance;
-        _controller.CameraController.OnMove += Move;
-        _controller.CameraController.OnRotate += Rotate;
-        _controller.CameraController.OnZoom += Zoom;
-        _controller.CameraController.OnReset += ResetCamera;
-        _trCamera = transform;
-        _ = _trCamera.SetAngleX(_angleX);
-        _target.position = _trCamera.position;
-        _target.eulerAngles = _trCamera.eulerAngles;
-    }
-
-    private void Update() => _controller.CameraController.Control();
-
-    private void LateUpdate() => CameraUpdate();
-
-    #endregion Unity Methods
-
-    private void CameraUpdate()
-    {
-        Vector3 angle = new(0, _targetAngleY, 0);
+        Vector3 angle = Vector3.zero.SetY(_targetAngleY);
         _target.rotation = Quaternion.Slerp(_target.rotation, Quaternion.Euler(angle), _lerpRotate);
-        _ = _trCamera.SetAngleX(0);
-        _trCamera.position += _trCamera.forward * _distanceZ;
+        _trCamera.position -= ShiftCamera();
         _trCamera.position = Vector3.Lerp(_trCamera.position, _target.position, _lerpMove);
-        _trCamera.rotation = _target.rotation;
-        _trCamera.position -= _trCamera.forward * _distanceZ;
-        _ = _trCamera.SetAngleX(_angleX);
+        _trCamera.eulerAngles = _target.eulerAngles.SetX(_angleX);
+        _trCamera.position += ShiftCamera();
+
+        Vector3 ShiftCamera() => _trCamera.Forward(_trCamera.eulerAngles.SetX(0), -_distanceZ) + _trCamera.Forward(_trCamera.eulerAngles.SetX(_angleX), -_zoomDistance);
     }
-    private void Move(Vector2 position)
+
+    protected override void Move(Vector2 position)
     {
         if (position == Vector2.zero)
         {
@@ -64,7 +45,7 @@ public class Camera3DFromAbove : BootstrapElement
         _target.position -= _target.forward * position.y * _speedMove;
         _ = _target.SetPositionY(oldY);
     }
-    private void Rotate(float scaleRotation)
+    protected override void Rotate(float scaleRotation)
     {
         if (scaleRotation == 0)
         {
@@ -72,30 +53,38 @@ public class Camera3DFromAbove : BootstrapElement
         }
 
         OnUpdateRotate?.Invoke();
-        _targetAngleY += scaleRotation;
+        _targetAngleY += scaleRotation * _speedRotate;
         if (_targetAngleY is < (-CIRCLE_ANGLE) or > CIRCLE_ANGLE)
         {
             _targetAngleY = 0;
         }
     }
-
-    private void Zoom(float scaleZoom)
+    protected override void Zoom(float scaleZoom)
     {
-        _target.position += Vector3.up * scaleZoom * _speedZoom;
-        if (_trCamera.position.y > _zoomMax + MIN_DELTA)
+        if (scaleZoom == 0)
         {
-            _ = _target.SetPositionY(_zoomMax);
+            return;
         }
 
-        if (_trCamera.position.y < _zoomMin - MIN_DELTA)
+        OnUpdateZoom?.Invoke();
+        _zoomDistance += scaleZoom * _speedZoom;
+        if (_zoomDistance > _zoomMax + MIN_DELTA)
         {
-            _ = _target.SetPositionY(_zoomMin);
+            _zoomDistance = _zoomMax;
+        }
+
+        if (_zoomDistance < _zoomMin - MIN_DELTA)
+        {
+            _zoomDistance = _zoomMin;
         }
     }
 
-    private void ResetCamera()
+    protected override void ResetCamera()
     {
-        _ = _target.SetPositionX(0);
-        _ = _target.SetPositionZ(-120);
+        OnReset?.Invoke();
+        _target.position = _defaultPosition;
+        _targetAngleY = _defaultAngleY;
+        _zoomDistance = _defaultZoom;
+        CameraUpdate();
     }
 }
