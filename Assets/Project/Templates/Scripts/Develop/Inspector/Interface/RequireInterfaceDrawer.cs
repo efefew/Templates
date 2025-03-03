@@ -3,12 +3,12 @@ using UnityEditor;
 
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(RequireInterfaceAttribute))]
+[CustomPropertyDrawer(typeof(InterfaceAttribute))]
 public class RequireInterfaceDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        RequireInterfaceAttribute requiredAttribute = (RequireInterfaceAttribute)attribute;
+        InterfaceAttribute requiredAttribute = (InterfaceAttribute)attribute;
         System.Type interfaceType = requiredAttribute.InterfaceType;
 
         // Отрисовка поля для MonoBehavior
@@ -25,8 +25,8 @@ public class RequireInterfaceDrawer : PropertyDrawer
         // Проверка, реализует ли компонент интерфейс
         if (obj != null)
         {
-            MonoBehaviour monoBehaviour = (MonoBehaviour)obj;
-            if (!interfaceType.IsAssignableFrom(monoBehaviour.GetType()))
+            MonoBehaviour monoBehavior = (MonoBehaviour)obj;
+            if (!interfaceType.IsAssignableFrom(monoBehavior.GetType()))
             {
                 obj = null;
                 Debug.LogError($"Компонент должен реализовывать {interfaceType.Name}!");
