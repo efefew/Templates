@@ -5,8 +5,8 @@ using UnityEngine;
 public abstract class CameraController
 {
     public Action OnReset;
-    public Action<float> OnZoom, OnRotate;
-    public Action<Vector2> OnMove;
+    public event Action<float> OnZoom, OnRotate;
+    public event Action<Vector2> OnMove;
     protected ListKeyCombination _zoomIn, _zoomOut;
     protected ListKeyCombination _rotateClockwise, _rotateCounterclockwise;
     protected ListKeyCombination _moveUp, _moveDown, _moveLeft, _moveRight;

@@ -6,7 +6,7 @@ public class CircleLimit : Limit
     [Min(0)]
     private float _radius = 1f;
     [SerializeField]
-    protected bool _local = false;
+    protected bool _local;
     protected override void Awake()
     {
         base.Awake();
@@ -30,7 +30,7 @@ public class CircleLimit : Limit
         Quaternion quaternion = _center.rotation;
         if (_local)
         {
-            //_center should be parent
+            //_center should be parenting
             _center.rotation = Quaternion.identity;
         }
 
@@ -45,3 +45,4 @@ public class CircleLimit : Limit
         }
     }
 }
+

@@ -1,11 +1,8 @@
-using System;
-
 using UnityEngine;
 
-[RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(UnityEngine.Camera))]
 public class Camera3DFromAbove : CameraOperator
 {
-    public event Action OnUpdateMove, OnUpdateRotate, OnUpdateZoom, OnReset;
 
     private const float MIN_DELTA = 0.1f;
     private const int CIRCLE_ANGLE = 360;
@@ -16,9 +13,8 @@ public class Camera3DFromAbove : CameraOperator
     private float _distanceZ = 5, _angleX = 30, _zoomDistance = 1f;
     [SerializeField]
     private float _defaultAngleY, _defaultZoom;
-    private float _targetAngleY = 0;
+    private float _targetAngleY;
 
-    public override void StartBootstrap() => base.StartBootstrap();
     protected override void CameraUpdate()
     {
         Vector3 angle = Vector3.zero.SetY(_targetAngleY);
@@ -37,12 +33,9 @@ public class Camera3DFromAbove : CameraOperator
         {
             return;
         }
-
-        OnUpdateMove?.Invoke();
-
         float oldY = _target.position.y;
-        _target.position -= _target.right * position.x * _speedMove;
-        _target.position -= _target.forward * position.y * _speedMove;
+        _target.position -= _target.right * (position.x * _speedMove);
+        _target.position -= _target.forward * (position.y * _speedMove);
         _ = _target.SetPositionY(oldY);
     }
     protected override void Rotate(float scaleRotation)
@@ -52,7 +45,6 @@ public class Camera3DFromAbove : CameraOperator
             return;
         }
 
-        OnUpdateRotate?.Invoke();
         _targetAngleY += scaleRotation * _speedRotate;
         if (_targetAngleY is < (-CIRCLE_ANGLE) or > CIRCLE_ANGLE)
         {
@@ -66,7 +58,6 @@ public class Camera3DFromAbove : CameraOperator
             return;
         }
 
-        OnUpdateZoom?.Invoke();
         _zoomDistance += scaleZoom * _speedZoom;
         if (_zoomDistance > _zoomMax + MIN_DELTA)
         {
@@ -81,7 +72,6 @@ public class Camera3DFromAbove : CameraOperator
 
     protected override void ResetCamera()
     {
-        OnReset?.Invoke();
         _target.position = _defaultPosition;
         _targetAngleY = _defaultAngleY;
         _zoomDistance = _defaultZoom;

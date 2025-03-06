@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class PointLimit : Limit
 {
     [SerializeField]

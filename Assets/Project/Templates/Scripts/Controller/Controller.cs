@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Controller : MonoBehaviour, BootstrapElement
+public abstract class Controller : MonoBehaviour, IBootstrap
 {
     public static Controller Instance { get; protected set; }
     [field: SerializeField]

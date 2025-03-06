@@ -143,7 +143,16 @@ public static class Vector3Extensions
     public static Vector3 AddZ(this Vector3 vector, float z) => new(vector.x, vector.y, vector.z + z);
 
     #endregion Add
+    
+    #region Mul
+    public static Vector3 MulX(this Vector3 vector, float value) => new(vector.x * value, vector.y, vector.z);
 
+    public static Vector3 MulY(this Vector3 vector, float value) => new(vector.x, vector.y  * value, vector.z);
+
+    public static Vector3 MulZ(this Vector3 vector, float value) => new(vector.x, vector.y, vector.z  * value);
+
+    #endregion Mul
+    
     #region Set
 
     public static Transform SetAngleX(this Transform tr, float x, bool local = false)
