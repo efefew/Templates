@@ -24,7 +24,7 @@ namespace Project.Templates.Scripts.Develop.Architecture.Pause
                 Instance = this;
             else
                 Destroy(this);
-            foreach (var mono in _monoBehaviors)
+            foreach (MonoBehaviour mono in _monoBehaviors)
             {
                 _pauses.Add(mono as IPause);
             }
@@ -83,14 +83,16 @@ namespace Project.Templates.Scripts.Develop.Architecture.Pause
         {
             _pauses.Remove(p);
         }
-
+#if UNITY_EDITOR
         [MenuItem("Tools/Pause")]
+#endif
         public static void Pause()
         {
             Instance._isPause = true;
         }
-
+#if UNITY_EDITOR
         [MenuItem("Tools/Resume")]
+#endif
         public static void Resume()
         {
             Instance._isPause = false;

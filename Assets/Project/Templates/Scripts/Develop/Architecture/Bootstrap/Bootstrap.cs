@@ -10,10 +10,10 @@ public class Bootstrap : MonoBehaviour
     {
         for (int id = 0; id < _bootstraps.Length; id++)
         {
-            (_bootstraps[id] as IBootstrap).StartBootstrap();
+            (_bootstraps[id] as IBootstrap)?.StartBootstrap();
         }
 #if !UNITY_EDITOR
-        _bootstrapElements = null;
+        _bootstraps = null;
 #endif
     }
 }
