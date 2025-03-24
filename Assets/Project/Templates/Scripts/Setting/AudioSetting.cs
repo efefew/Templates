@@ -1,39 +1,91 @@
+#region
+
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
+
+#endregion
+
 public class AudioSetting : Setting
 {
-    [SerializeField]
-    private AudioMixer _audioMixer;
-    [SerializeField]
-    private ToggleSwap _toggleMusic, _toggleSound;
-
-    private const int MUTE = -80;
+    private const int MIN = -80, MAX = 20;
+    [SerializeField] private Slider _musicSlider, _soundsSlider;
+    [SerializeField] private Toggle _musicToggle, _soundsToggle;
+    [SerializeField] private AudioMixer _audioMixer;
 
     protected override void Start()
     {
         base.Start();
-
-        _audioMixer.SetFloat("MusicVolume", _setting.Music ? 0 : MUTE);
-        _audioMixer.SetFloat("SoundsVolume", _setting.Sound ? 0 : MUTE);
-
-        _toggleMusic.Toggle.isOn = _setting.Music;
-        _toggleMusic.Swap(_setting.Music);
-        _toggleMusic.Toggle.onValueChanged.AddListener(Music);
-
-        _toggleSound.Toggle.isOn = _setting.Sound;
-        _toggleSound.Swap(_setting.Sound);
-        _toggleSound.Toggle.onValueChanged.AddListener(Sound);
-
-    }
-    public void Music(bool on)
-    {
-        _setting.Music = on;
-        _audioMixer.SetFloat("MusicVolume", _setting.Music ? 0 : MUTE);
+        Music(SaveManager.SettingData.Music);
+        Sound(SaveManager.SettingData.Sound);
+        SetMusicSlider();
+        SetSoundSlider();
+        SetMusicToggle();
+        SetSoundToggle();
     }
 
-    public void Sound(bool on)
+    private void OnDestroy()
     {
-        _setting.Sound = on;
-        _audioMixer.SetFloat("SoundsVolume", _setting.Sound ? 0 : MUTE);
+        if (_musicSlider != null)
+            _musicSlider.onValueChanged.RemoveListener(Music);
+        if (_soundsSlider != null)
+            _soundsSlider.onValueChanged.RemoveListener(Sound);
+        if (_musicToggle != null)
+            _musicToggle.onValueChanged.RemoveListener(Music);
+        if (_soundsToggle != null)
+            _soundsToggle.onValueChanged.RemoveListener(Sound);
+    }
+
+    private void SetMusicSlider()
+    {
+        if (_musicSlider == null) return;
+        _musicSlider.value = SaveManager.SettingData.Music;
+        _musicSlider.onValueChanged.AddListener(Music);
+    }
+
+    private void SetSoundSlider()
+    {
+        if (_soundsSlider == null) return;
+        _soundsSlider.value = SaveManager.SettingData.Sound;
+        _soundsSlider.onValueChanged.AddListener(Sound);
+    }
+
+    private void SetMusicToggle()
+    {
+        if (_musicToggle == null) return;
+        _musicToggle.isOn = SaveManager.SettingData.Music > 0.5f;
+        _musicToggle.onValueChanged.AddListener(Music);
+    }
+
+    private void SetSoundToggle()
+    {
+        if (_soundsToggle == null) return;
+        _soundsToggle.isOn = SaveManager.SettingData.Sound > 0.5f;
+        _soundsToggle.onValueChanged.AddListener(Sound);
+    }
+
+    private void Music(float value)
+    {
+        SaveManager.SettingData.Music = value;
+        value = -value * MIN + MIN;
+        _audioMixer.SetFloat("MusicVolume", value);
+    }
+
+    private void Sound(float value)
+    {
+        SaveManager.SettingData.Sound = value;
+
+        value = -value * MIN + MIN;
+        _audioMixer.SetFloat("SoundsVolume", value);
+    }
+
+    private void Music(bool on)
+    {
+        Music(on.ToInt());
+    }
+
+    private void Sound(bool on)
+    {
+        Sound(on.ToInt());
     }
 }
