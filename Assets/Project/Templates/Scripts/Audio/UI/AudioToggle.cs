@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AudioToggle : MonoBehaviour
+[RequireComponent(typeof(Toggle))]
+public class AudioToggle : AudioUI
 {
-    // Start is called before the first frame update
-    void Start()
+    private Toggle _toggle;
+
+    protected override void Awake()
     {
-        
+        base.Awake();
+        _toggle = GetComponent<Toggle>();
+        _toggle.onValueChanged.AddListener(Play);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Play(bool value)
     {
-        
+        _audio.Play();
     }
 }

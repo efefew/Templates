@@ -1,10 +1,87 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 public static class UnityExtensions
 {
+    public static IEnumerator IDownloadData<T>(string url, Action<T> callbackOnSuccess, Action<string> callbackOnError = null, bool removeTrashSymbols = false)
+    {
+        url = url.Replace("http://", "https://");
+        using UnityWebRequest request = UnityWebRequest.Get(url);
+        
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string json = request.downloadHandler.text;
+            if (removeTrashSymbols)
+                json = json.Replace("$", "");
+            callbackOnSuccess?.Invoke(JsonUtility.FromJson<T>(json));
+        }
+        else
+            callbackOnError?.Invoke(request.error);
+    }
+    public static IEnumerator IDownloadImage(string url, Image image, Action<string> callbackOnError = null)
+    {
+        url = url.Replace("http://", "https://");
+        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(new Uri(url));
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            if(image) image.sprite = DownloadHandlerTexture.GetContent(request).ToSprite();
+        }
+        else
+            callbackOnError?.Invoke(request.error);
+    }
+    public static IEnumerator IDownloadTexture(string url, Action<Texture2D> callbackOnSuccess, Action<string> callbackOnError = null)
+    {
+        url = url.Replace("http://", "https://");
+        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(new Uri(url));
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+            callbackOnSuccess(DownloadHandlerTexture.GetContent(request));
+        else
+            callbackOnError?.Invoke(request.error);
+    }
+    /// <summary>
+    /// Ищет min x, min y, max x, max y
+    /// </summary>
+    /// <param name="points">точки</param>
+    /// <returns>min x, min y, max x, max y</returns>
+    public static (float, float, float, float) MinMax(this Vector2[] points)
+    {
+        Vector2 minPoint = new() { x = points[0].x, y = points[0].y };
+        Vector2 maxPoint = new() { x = points[0].x, y = points[0].y };
+        for (int id = 0; id < points.Length; id++)
+        {
+            if (points[id].x < minPoint.x)
+                minPoint.x = points[id].x;
+
+            if (points[id].y < minPoint.y)
+                minPoint.y = points[id].y;
+
+            if (points[id].x > maxPoint.x)
+                maxPoint.x = points[id].x;
+
+            if (points[id].y > maxPoint.y)
+                maxPoint.y = points[id].y;
+        }
+
+        return (minPoint.x, minPoint.y, maxPoint.x, maxPoint.y);
+    }
+    public static void SetColor(this LineRenderer line, Color32 color)
+    {
+        line.startColor = color;
+        line.endColor = color;
+    }
     public static bool AnyContains(this string text, params string[] values)
     {
         return values.Any(text.Contains);

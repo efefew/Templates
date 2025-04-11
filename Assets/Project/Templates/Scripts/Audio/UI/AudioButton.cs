@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AudioButton : MonoBehaviour
+[RequireComponent(typeof(Button))]
+public class AudioButton : AudioUI
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Button _button;
 
-    // Update is called once per frame
-    void Update()
+    protected override void Awake()
     {
-        
+        base.Awake();
+        _button = GetComponent<Button>();
+        _button.onClick.AddListener(_audio.Play);
     }
 }
