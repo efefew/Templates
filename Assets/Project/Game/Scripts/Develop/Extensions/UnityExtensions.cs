@@ -5,11 +5,43 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 public static class UnityExtensions
 {
+    public enum SceneType
+    {
+        Intro,
+        /*Menu,
+        Load,
+        Lobby,*/
+        Game
+    }
+
+    private static string GetNameScenes(SceneType scene)
+    {
+        return scene switch
+        {
+            SceneType.Intro => "Intro",
+            /*SceneType.Menu => "Menu",
+            SceneType.Load => "Load",
+            SceneType.Lobby => "Lobby",*/
+            SceneType.Game => "Game",
+            _ => ""
+        };
+    }
+    public static IEnumerator ILoadScene(SceneType scene, Action<float> callback = null)
+    {
+        yield return SaveManager.LoadAll();
+        AsyncOperation operation = SceneManager.LoadSceneAsync(GetNameScenes(scene));
+        while (operation is { isDone: false })
+        {
+            callback?.Invoke(operation.progress);
+            yield return null;
+        }
+    }
     public static IEnumerator IDownloadData<T>(string url, Action<T> callbackOnSuccess, Action<string> callbackOnError = null, bool removeTrashSymbols = false)
     {
         url = url.Replace("http://", "https://");
