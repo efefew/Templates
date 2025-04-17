@@ -36,14 +36,14 @@ public class MousePointManager : MonoBehaviour
     }
     [SerializeField]
     private Camera _c;
-#if (UNITY_ANDROID || UNITY_IOS)
     public static Camera TargetCamera { get; private set; }
 
     private void Awake()
     {
         TargetCamera = _c;
     }
-#else
+#if !(UNITY_ANDROID || UNITY_IOS)
+
     private void OnGUI()
     {
         Event e = Event.current;
