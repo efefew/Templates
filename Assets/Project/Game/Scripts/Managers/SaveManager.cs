@@ -43,16 +43,8 @@ public class PlayerControllerData
 [Serializable]
 public class SettingData
 {
-    [SerializeField]
-    private float _music = 1f;
-    [SerializeField]
-    private float _sound = 1f;
-
-    public float Music
-    { get => _music; set { _music = value; SaveManager.Save(this); } }
-
-    public float Sound
-    { get => _sound; set { _sound = value; SaveManager.Save(this); } }
+    public float Music;
+    public float Sound;
 }
 [Serializable]
 public class PlayerData

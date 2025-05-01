@@ -15,6 +15,6 @@ public class AudioToggle : AudioUI
 
     private void Play(bool value)
     {
-        _audio.Play();
+        AudioPlay();
     }
 }

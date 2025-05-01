@@ -1,6 +1,7 @@
 #region
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 #endregion
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Toggle))]
 public class ToggleSwap : MonoBehaviour
 {
-    [SerializeField] private GameObject _on, _off;
+    [SerializeField] private UnityEvent _on, _off;
 
     private Toggle _toggle;
 
@@ -30,7 +31,9 @@ public class ToggleSwap : MonoBehaviour
 
     private void Swap(bool on)
     {
-        _on.SetActive(on);
-        _off.SetActive(!on);
+        if(on)
+            _on?.Invoke();
+        else
+            _off?.Invoke();
     }
 }

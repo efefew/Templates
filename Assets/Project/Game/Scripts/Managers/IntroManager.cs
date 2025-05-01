@@ -5,6 +5,7 @@ public class IntroManager : MonoBehaviour
     private UnityExtensions.SceneType _scene;
     public void Awake()
     {
+        transform.parent = null;
         DontDestroyOnLoad(this);
         StartCoroutine(UnityExtensions.ILoadScene(_scene));
     }

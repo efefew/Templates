@@ -10,6 +10,6 @@ public class AudioButton : AudioUI
     {
         base.Awake();
         _button = GetComponent<Button>();
-        _button.onClick.AddListener(_audio.Play);
+        _button.onClick.AddListener(AudioPlay);
     }
 }
