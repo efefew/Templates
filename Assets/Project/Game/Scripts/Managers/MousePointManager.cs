@@ -42,7 +42,7 @@ public class MousePointManager : MonoBehaviour
     {
         TargetCamera = _c;
     }
-#if !(UNITY_ANDROID || UNITY_IOS)
+#if !(UNITY_ANDROID || UNITY_IOS) || UNITY_EDITOR
 
     private void OnGUI()
     {
