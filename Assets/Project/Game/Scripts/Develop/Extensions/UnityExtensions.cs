@@ -237,7 +237,15 @@ public static class UnityExtensions
         
         return false;
     }
-
+    public static T RayFromCamera<T>(Vector3? click = null, float z = 100) where T : class 
+    {
+        /*if(!Input.GetMouseButton(0) && Input.touchCount < 1) return null;*/
+        Vector3 origin = click ?? MousePointManager.ScreenPosition;
+        origin.z -= z;
+        Vector3 direction = Vector3.forward;
+        if (!Physics.Raycast(origin, direction, out RaycastHit hit)) return null;
+        return hit.transform.TryGetComponent(out T obj) ? obj : null;
+    }
     /// <summary>
     ///  Находится ли объект в пределах экрана
     /// </summary>
