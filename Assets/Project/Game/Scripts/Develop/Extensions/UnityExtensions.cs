@@ -19,7 +19,20 @@ public static class UnityExtensions
         Lobby,*/
         Game
     }
+    public static Vector3? ScreenTo3DPoint(this Camera camera) {
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new (Vector3.up, Vector3.zero);
+        if (!plane.Raycast(ray, out float enter)) return null;
+        return ray.GetPoint(enter);
+    }
+    public static float? PlaneDistanceFromPoint(this Transform transform)
+    {
+        Plane plane = new(Vector3.forward, Vector3.zero); // плоскость z=0
+        Ray ray = new(transform.position, transform.forward);
 
+        if (plane.Raycast(ray, out float enter)) return enter;
+        return null;
+    }
     private static string GetNameScenes(SceneType scene)
     {
         return scene switch
