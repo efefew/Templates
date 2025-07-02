@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public static class Vector3Extensions
 {
@@ -250,4 +251,26 @@ public static class Vector3Extensions
     public static Vector3 SetZ(this Vector3 vector, float z) => new(vector.x, vector.y, z);
 
     #endregion Set
+    
+    public static Vector3 GetCenter(params Transform[] points)
+    {
+        Vector3 center = points.Aggregate(Vector3.zero, (current, t) => current + t.position);
+
+        center /= points.Length;
+        return center;
+    }
+    public static Vector3 GetCenter(params Vector3[] points)
+    {
+        Vector3 center = points.Aggregate(Vector3.zero, (current, t) => current + t);
+
+        center /= points.Length;
+        return center;
+    }
+    public static Vector2 GetCenter(params Vector2[] points)
+    {
+        Vector2 center = points.Aggregate(Vector2.zero, (current, t) => current + t);
+
+        center /= points.Length;
+        return center;
+    }
 }

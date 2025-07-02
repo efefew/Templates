@@ -147,6 +147,20 @@ public static class UnityExtensions
         return false;
     }
     /// <summary>
+    /// Получить угол слежения за целью только по оси Y
+    /// </summary>
+    /// <param name="transform">следящий</param>
+    /// <param name="target">цель</param>
+    public static Quaternion GetQuaternionLookAtY(this Transform transform, Vector3 target)
+    {
+        Vector3 targetPosition = new(target.x, transform.position.y, target.z);
+        Quaternion oldQuaternion = transform.rotation;
+        transform.LookAt(targetPosition);
+        Quaternion quaternion = transform.rotation;
+        transform.rotation = oldQuaternion;
+        return quaternion;
+    }
+    /// <summary>
     /// Следить за целью только по оси Y
     /// </summary>
     /// <param name="transform">следящий</param>
