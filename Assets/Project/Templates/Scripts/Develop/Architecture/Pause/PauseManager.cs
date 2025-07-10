@@ -1,101 +1,20 @@
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
-namespace Project.Templates.Scripts.Develop.Architecture.Pause
+public static class PauseManager
 {
-    public class PauseManager : MonoBehaviour
+    public static bool IsPause {get; private set;}
+    public static List<IPause> PausedObjects { get; private set; } = new();
+    
+    
+    [MenuItem("Tools/PauseManager/Pause")]
+    public static void Pause()
     {
-        [Interface(typeof(IPause))]
-        [SerializeField]
-        private MonoBehaviour[] _monoBehaviors;
-
-        private readonly List<IPause> _pauses = new();
-        [SerializeField]
-        private bool _isPause;
-
-        private static PauseManager Instance { get; set; }
-
-        #region Unity Methods
-
-        private void Start()
-        {
-            if(Instance == null)
-                Instance = this;
-            else
-                Destroy(this);
-            foreach (MonoBehaviour mono in _monoBehaviors)
-            {
-                _pauses.Add(mono as IPause);
-            }
-#if !UNITY_EDITOR
-        _monoBehaviors = null;
-#endif
-        }
-
-        private void Update()
-        {
-            if (_isPause)
-            {
-                return;
-            }
-
-            for (int id = 0; id < _pauses.Count; id++)
-            {
-                _pauses[id].UpdatePause();
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            if (_isPause)
-            {
-                return;
-            }
-
-            for (int id = 0; id < _pauses.Count; id++)
-            {
-                _pauses[id].FixedUpdatePause();
-            }
-        }
-
-        private void LateUpdate()
-        {
-            if (_isPause)
-            {
-                return;
-            }
-
-            for (int id = 0; id < _pauses.Count; id++)
-            {
-                _pauses[id].LateUpdatePause();
-            }
-        }
-
-        #endregion Unity Methods
-
-        public void Add(IPause p)
-        {
-            _pauses.Add(p);
-        }
-
-        public void Remove(IPause p)
-        {
-            _pauses.Remove(p);
-        }
-#if UNITY_EDITOR
-        [MenuItem("Tools/Pause")]
-#endif
-        public static void Pause()
-        {
-            Instance._isPause = true;
-        }
-#if UNITY_EDITOR
-        [MenuItem("Tools/Resume")]
-#endif
-        public static void Resume()
-        {
-            Instance._isPause = false;
-        }
+        IsPause = true;
+    }
+    [MenuItem("Tools/PauseManager/Resume")]
+    public static void Resume()
+    {
+        IsPause = false;
     }
 }

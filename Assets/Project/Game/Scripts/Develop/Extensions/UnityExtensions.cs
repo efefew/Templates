@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.XInput;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,16 @@ public static class UnityExtensions
         Load,
         Lobby,*/
         Game
+    }
+    private static int _countTemporaryVibration;
+    public static IEnumerator ITemporaryVibration(this XInputController xbox, float lowFrequency, float highFrequency, float duration)
+    {
+        _countTemporaryVibration++;
+        xbox.SetMotorSpeeds(lowFrequency, highFrequency);
+        yield return new WaitForSeconds(duration);
+        _countTemporaryVibration--;
+        if(_countTemporaryVibration == 0)
+            xbox.SetMotorSpeeds(0, 0);
     }
     public static Vector3? ScreenTo3DPoint(this Camera camera) {
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);

@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
-
+using UnityEditor;
 using UnityEngine;
-//DontDestroyOnLoad(this);
 public static class SaveManager
 {
     public static SettingData SettingData { get; private set; }
     public static PlayerData PlayerData { get; private set; }
+    [MenuItem("Tools/SaveManager/DeleteAllSave")]
     public static void DeleteAllSave() => PlayerPrefs.DeleteAll();
 
     private static T Load<T>(string key)
