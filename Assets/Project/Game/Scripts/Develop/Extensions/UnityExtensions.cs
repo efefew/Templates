@@ -25,13 +25,11 @@ public static class UnityExtensions
         if (!plane.Raycast(ray, out float enter)) return null;
         return ray.GetPoint(enter);
     }
-    public static float? PlaneDistanceFromPoint(this Transform transform)
-    {
-        Plane plane = new(Vector3.forward, Vector3.zero); // плоскость z=0
-        Ray ray = new(transform.position, transform.forward);
-
-        if (plane.Raycast(ray, out float enter)) return enter;
-        return null;
+    public static Vector3? ScreenTo3DPoint(this Camera camera, Vector3 position) {
+        Ray ray = camera.ScreenPointToRay(position);
+        Plane plane = new (Vector3.up, Vector3.zero);
+        if (!plane.Raycast(ray, out float enter)) return null;
+        return ray.GetPoint(enter);
     }
     private static string GetNameScenes(SceneType scene)
     {
@@ -226,7 +224,27 @@ public static class UnityExtensions
             Object.Destroy(transform.GetChild(idChild).gameObject);
         }
     }
+    /// <summary>
+    /// Проверяет, находится ли указатель мыши над UI-элементом, принадлежащим  Canvas.
+    /// </summary>
+    /// <param name="canvas">Canvas, над которым нужно проверить указатель.</param>
+    /// <returns>true, если указатель над UI, false иначе.</returns>
+    public static bool IsPointerOverUI(Canvas canvas)
+    {
+        if (!EventSystem.current) return false;
 
+        GraphicRaycaster gr = canvas.GetComponent<GraphicRaycaster>();
+        if (!gr) return false;
+
+        PointerEventData data = new(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new();
+        gr.Raycast(data, results);
+        return results.Count > 0;
+    }
     /// <summary>
     /// Проверяет, находится ли указатель мыши над объектом UI.
     /// </summary>

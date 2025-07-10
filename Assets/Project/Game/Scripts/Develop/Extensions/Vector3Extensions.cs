@@ -1,7 +1,15 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public static class Vector3Extensions
+public static class MultiplicationVector3Extensions
+{
+    public static Vector3 MulX(this Vector2 vector, float value) => new(vector.x * value, vector.y);
+    public static Vector3 MulY(this Vector2 vector, float value) => new(vector.x, vector.y  * value);
+    public static Vector3 MulX(this Vector3 vector, float value) => new(vector.x * value, vector.y, vector.z);
+    public static Vector3 MulY(this Vector3 vector, float value) => new(vector.x, vector.y  * value, vector.z);
+    public static Vector3 MulZ(this Vector3 vector, float value) => new(vector.x, vector.y, vector.z  * value);
+}
+public static class AxisVector3Extensions
 {
     public static Vector3 Forward(this Transform tr, Vector3 angle, float scale)
     {
@@ -51,8 +59,9 @@ public static class Vector3Extensions
         tr.rotation = quaternion;
         return vector;
     }
-    #region Add
-
+}
+public static class AddVector3Extensions
+{
     public static Transform AddAngleX(this Transform tr, float x, bool local = false)
     {
         if (local)
@@ -136,26 +145,17 @@ public static class Vector3Extensions
 
         return tr;
     }
+    public static Vector2 AddX(this Vector2 vector, float x) => new(vector.x + x, vector.y);
 
+    public static Vector2 AddY(this Vector2 vector, float y) => new(vector.x, vector.y + y);
     public static Vector3 AddX(this Vector3 vector, float x) => new(vector.x + x, vector.y, vector.z);
 
     public static Vector3 AddY(this Vector3 vector, float y) => new(vector.x, vector.y + y, vector.z);
 
     public static Vector3 AddZ(this Vector3 vector, float z) => new(vector.x, vector.y, vector.z + z);
-
-    #endregion Add
-    
-    #region Mul
-    public static Vector3 MulX(this Vector3 vector, float value) => new(vector.x * value, vector.y, vector.z);
-
-    public static Vector3 MulY(this Vector3 vector, float value) => new(vector.x, vector.y  * value, vector.z);
-
-    public static Vector3 MulZ(this Vector3 vector, float value) => new(vector.x, vector.y, vector.z  * value);
-
-    #endregion Mul
-    
-    #region Set
-
+}
+public static class SetVector3Extensions
+{
     public static Transform SetAngleX(this Transform tr, float x, bool local = false)
     {
         if (local)
@@ -249,9 +249,14 @@ public static class Vector3Extensions
     public static Vector3 SetY(this Vector3 vector, float y) => new(vector.x, y, vector.z);
 
     public static Vector3 SetZ(this Vector3 vector, float z) => new(vector.x, vector.y, z);
-
-    #endregion Set
-    
+}
+public static class ConvertVector3Extensions
+{
+    public static Vector2 ZToY(this Vector3 vector) => new(vector.x, vector.z);
+    public static Vector2Int ToVector2Int(this Vector2 vector) => new ((int)vector.x, (int)vector.y);
+}
+public static class Vector3Extensions
+{
     public static Vector3 GetCenter(params Transform[] points)
     {
         Vector3 center = points.Aggregate(Vector3.zero, (current, t) => current + t.position);
