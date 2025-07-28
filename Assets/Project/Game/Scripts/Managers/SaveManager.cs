@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
+
 public static class SaveManager
 {
     public static SettingData SettingData { get; private set; }
     public static PlayerData PlayerData { get; private set; }
+
     [MenuItem("Tools/SaveManager/DeleteAllSave")]
     public static void DeleteAllSave() => PlayerPrefs.DeleteAll();
 
@@ -28,24 +30,28 @@ public static class SaveManager
         PlayerPrefs.SetString(key, JsonUtility.ToJson(save));
     }
 }
+
 #region ControllerData
+
 [Serializable]
 public class CameraControllerData
 {
-
 }
+
 [Serializable]
 public class PlayerControllerData
 {
-
 }
+
 #endregion ControllerData
+
 [Serializable]
 public class SettingData
 {
-    public float Music;
-    public float Sound;
+    public float Music = 1;
+    public float Sound = 1;
 }
+
 [Serializable]
 public class PlayerData
 {
