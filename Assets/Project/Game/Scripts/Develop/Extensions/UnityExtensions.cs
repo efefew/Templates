@@ -136,6 +136,24 @@ public static class UnityExtensions
         };
     }
 
+    public static SceneType GetScenes(string scene)
+    {
+        return scene switch
+        {
+            "Intro" => SceneType.Intro,
+            /*"Menu" => SceneType.Menu,
+            "Load" => SceneType.Load,
+            "Lobby" => SceneType.Lobby,*/
+            "Game" => SceneType.Game,
+            _ => throw new ArgumentOutOfRangeException(nameof(scene), scene, null)
+        };
+    }
+
+    public static SceneType GetActiveScene()
+    {
+        return GetScenes(SceneManager.GetActiveScene().name);
+    }
+
     public static void LoadScene(SceneType scene, Action<float> callback = null)
     {
         EntryPoint.StartCoroutine(ILoadScene(scene, callback));
