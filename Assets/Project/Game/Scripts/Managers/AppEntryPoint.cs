@@ -1,19 +1,20 @@
 using UnityEngine;
+using static UnityExtensions;
 
 public abstract class AppEntryPoint
 {
-    private static MonoEntryPoint _monoEntryPoint;
     private static AppEntryPoint _instance;
+    public static MonoEntryPoint EntryPoint { get; private set; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
-        _monoEntryPoint = new GameObject("MonoEntryPoint").AddComponent<MonoEntryPoint>();
-        Object.DontDestroyOnLoad(_monoEntryPoint);
-        _monoEntryPoint.LoadScene(UnityExtensions.SceneType.Game);
+        EntryPoint = new GameObject("EntryPoint").AddComponent<MonoEntryPoint>();
+        Object.DontDestroyOnLoad(EntryPoint);
+        LoadScene(SceneType.Game);
     }
 
-    private class MonoEntryPoint : MonoBehaviour
+    public class MonoEntryPoint : MonoBehaviour
     {
     }
 }

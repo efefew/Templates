@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityExtensions;
 
 public abstract class ScrollData<T> : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public abstract class ScrollData<T> : MonoBehaviour
     protected virtual void Start()
     {
         _scroll.onValueChanged.AddListener(call => OnScroll());
-        this.DownloadData<T>(_url, OnDownloadData, wrapper: _wrapper, removeTrashSymbols: _removeTrashSymbols);
+        DownloadData<T>(_url, OnDownloadData, wrapper: _wrapper, removeTrashSymbols: _removeTrashSymbols);
     }
 
     protected virtual void OnEnable()

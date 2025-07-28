@@ -8,6 +8,7 @@ using UnityEngine.InputSystem.XInput;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static AppEntryPoint;
 using static CoroutineExtensions;
 using static UnityExtensions;
 using Object = UnityEngine.Object;
@@ -135,29 +136,27 @@ public static class UnityExtensions
         };
     }
 
-    public static void LoadScene(this MonoBehaviour monoBehaviour, SceneType scene, Action<float> callback = null)
+    public static void LoadScene(SceneType scene, Action<float> callback = null)
     {
-        monoBehaviour.StartCoroutine(ILoadScene(scene, callback));
+        EntryPoint.StartCoroutine(ILoadScene(scene, callback));
     }
 
-    public static void DownloadData<T>(this MonoBehaviour monoBehaviour, string url, Action<T> callbackOnSuccess,
-        Action<string> callbackOnError = null,
+    public static void DownloadData<T>(string url, Action<T> callbackOnSuccess, Action<string> callbackOnError = null,
         bool removeTrashSymbols = false, bool wrapper = false)
     {
-        monoBehaviour.StartCoroutine(
+        EntryPoint.StartCoroutine(
             IDownloadData(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper));
     }
 
-    public static void DownloadImage(this MonoBehaviour monoBehaviour, string url, Image image,
-        Action<string> callbackOnError = null)
+    public static void DownloadImage(string url, Image image, Action<string> callbackOnError = null)
     {
-        monoBehaviour.StartCoroutine(IDownloadImage(url, image, callbackOnError));
+        EntryPoint.StartCoroutine(IDownloadImage(url, image, callbackOnError));
     }
 
-    public static void DownloadTexture(this MonoBehaviour monoBehaviour, string url,
-        Action<Texture2D> callbackOnSuccess, Action<string> callbackOnError = null)
+    public static void DownloadTexture(string url, Action<Texture2D> callbackOnSuccess,
+        Action<string> callbackOnError = null)
     {
-        monoBehaviour.StartCoroutine(IDownloadTexture(url, callbackOnSuccess, callbackOnError));
+        EntryPoint.StartCoroutine(IDownloadTexture(url, callbackOnSuccess, callbackOnError));
     }
 
 
