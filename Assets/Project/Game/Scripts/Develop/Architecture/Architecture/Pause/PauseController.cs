@@ -7,17 +7,18 @@ using static PauseManager;
 
 public class PauseController : MonoBehaviour
 {
+
     private void Update()
     {
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            if (IsPause)
+            if(IsPause)
                 Resume();
             else
                 Pause();
         }
-#endif
+        #endif
         if (IsPause)
         {
             return;

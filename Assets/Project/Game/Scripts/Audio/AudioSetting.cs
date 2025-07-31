@@ -1,6 +1,7 @@
 #region
 
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -16,7 +17,18 @@ public class AudioSetting : MonoBehaviour
 
     [SerializeField] 
     private Slider _musicSlider, _soundsSlider;
-
+    [MenuItem("Tools/Audio/Mute")]
+    public static void Mute()
+    {
+        SaveManager.SettingData.Music = 0;
+        SaveManager.SettingData.Sound = 0;
+    }
+    [MenuItem("Tools/Audio/Unmute")]
+    public static void Unmute()
+    {
+        SaveManager.SettingData.Music = 1;
+        SaveManager.SettingData.Sound = 1;
+    }
     private void Start()
     {
         Music(SaveManager.SettingData.Music);

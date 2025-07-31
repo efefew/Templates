@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XInput;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static AppEntryPoint;
+using static EntryPoint;
 using static CoroutineExtensions;
 using static UnityExtensions;
 using Object = UnityEngine.Object;
@@ -156,25 +156,25 @@ public static class UnityExtensions
 
     public static void LoadScene(SceneType scene, Action<float> callback = null)
     {
-        EntryPoint.StartCoroutine(ILoadScene(scene, callback));
+        EntryPoint.Mono.StartCoroutine(ILoadScene(scene, callback));
     }
 
     public static void DownloadData<T>(string url, Action<T> callbackOnSuccess, Action<string> callbackOnError = null,
         bool removeTrashSymbols = false, bool wrapper = false)
     {
-        EntryPoint.StartCoroutine(
+        EntryPoint.Mono.StartCoroutine(
             IDownloadData(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper));
     }
 
     public static void DownloadImage(string url, Image image, Action<string> callbackOnError = null)
     {
-        EntryPoint.StartCoroutine(IDownloadImage(url, image, callbackOnError));
+        EntryPoint.Mono.StartCoroutine(IDownloadImage(url, image, callbackOnError));
     }
 
     public static void DownloadTexture(string url, Action<Texture2D> callbackOnSuccess,
         Action<string> callbackOnError = null)
     {
-        EntryPoint.StartCoroutine(IDownloadTexture(url, callbackOnSuccess, callbackOnError));
+        EntryPoint.Mono.StartCoroutine(IDownloadTexture(url, callbackOnSuccess, callbackOnError));
     }
 
 
