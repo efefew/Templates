@@ -1,55 +1,30 @@
-using System.Linq;
-
+using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Tutorial : MonoBehaviour
 {
-    private bool _complete = false;
-
-    [SerializeField]
-    private TutorioalLevel[] _tutorials;
-    [SerializeField]
-    private Level[] _levels;
-
-    [SerializeField]
-    private GameObject _message;
-    [SerializeField]
-    private Button _messageButton;
-
-    private bool _messageEnd;
-
-    [SerializeField]
-    private Text _messageLabel;
+    public Dictionary<Type, TutorialElement> Tutorials { get; } = new ();
+    [field: SerializeField] public GameObject MessageObj { get; private set; }
+    [field: SerializeField] public GameObject BlockObj { get; private set; }
+    [field: SerializeField] public GameObject TutorialObj { get; private set; }
+    [field: SerializeField] public Transform WaitButtonsContainer { get; private set; }
+    [field: SerializeField] public Button MessageButton { get; private set; }
+    [field: SerializeField] public TMP_Text MessageLabel { get; private set; }
     public static Tutorial Instance { get; private set; }
-    public bool Complete { get => _complete; set => _complete = value; }
-    public GameObject Message => _message;
-    public bool MessageEnd { get => _messageEnd; set => _messageEnd = value; }
-    public Text MessageLabel => _messageLabel;
 
-    private void EndMessage() => _messageEnd = true;
-
-    public void StartTutorial(Level level)
+    public bool StepCompleted { get; set; }
+    public void NextStep() => StepCompleted = true;
+    private void Start()
     {
-        _complete = false;
-        if (_levels.Contains(level))
-        {
-            _tutorials[_levels.IndexOf(level)].StartTutorioal();
-        }
+        Instance ??= this;
+        AddTutorials();
     }
 
-    private void Awake()
+    private void AddTutorials()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-
-        _messageButton.onClick.AddListener(EndMessage);
-        _messageButton.onClick.AddListener(() => _message.SetActive(false));
+        Tutorials.Add(typeof(StartTutorialElement), new StartTutorialElement(MessageButton));
     }
 }

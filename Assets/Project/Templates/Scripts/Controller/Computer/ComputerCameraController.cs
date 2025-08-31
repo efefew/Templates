@@ -6,30 +6,30 @@ public class ComputerCameraController : CameraController
 {
     public ComputerCameraController()
     {
-        _zoomIn = new(new KeyComputer(TypeSmooth.ScrollUp));
-        _zoomOut = new(new KeyComputer(TypeSmooth.ScrollDown));
+        _zoomIn = new ListKeyCombination(new KeyComputer(TypeSmooth.ScrollUp));
+        _zoomOut = new ListKeyCombination(new KeyComputer(TypeSmooth.ScrollDown));
 
-        _rotateClockwise = new(new KeyComputer(TypeClick.Hold, KeyCode.E));
-        _rotateCounterclockwise = new(new KeyComputer(TypeClick.Hold, KeyCode.Q));
+        _rotateClockwise = new ListKeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.E));
+        _rotateCounterclockwise = new ListKeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Q));
 
-        float scale = 5;
+        const float SCALE = 5;
 
-        _moveUp = new(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseUp, scale)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.W)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.UpArrow)));
+        _moveUp = new ListKeyCombination(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseUp, SCALE)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.W)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.UpArrow)));
 
-        _moveDown = new(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseDown, scale)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.S)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.DownArrow)));
+        _moveDown = new ListKeyCombination(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseDown, SCALE)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.S)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.DownArrow)));
 
-        _moveRight = new(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseRight, scale)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.D)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.RightArrow)));
+        _moveRight = new ListKeyCombination(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseRight, SCALE)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.D)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.RightArrow)));
 
-        _moveLeft = new(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseLeft, scale)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.A)),
-                      new(new KeyComputer(TypeClick.Hold, KeyCode.LeftArrow)));
+        _moveLeft = new ListKeyCombination(new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.Mouse0), new KeyComputer(TypeSmooth.MouseLeft, SCALE)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.A)),
+                      new KeyCombination(new KeyComputer(TypeClick.Hold, KeyCode.LeftArrow)));
 
-        _reset = new(new KeyComputer(TypeClick.Down, KeyCode.F));
+        _reset = new ListKeyCombination(new KeyComputer(TypeClick.Down, KeyCode.F));
     }
 }

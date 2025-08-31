@@ -6,11 +6,17 @@ using UnityEngine;
 public static class SaveManager
 {
     public static SettingData SettingData { get; private set; }
+    public static TutorialData TutorialData { get; private set; }
     public static PlayerData PlayerData { get; private set; }
 
     [MenuItem("Tools/SaveManager/DeleteAllSave")]
     public static void DeleteAllSave() => PlayerPrefs.DeleteAll();
-
+    private static T Load<T>() where T : class, new()
+    {
+        string key = typeof(T).ToString();
+        T save = JsonUtility.FromJson<T>(PlayerPrefs.GetString(key)) ?? new T();
+        return save;
+    }
     private static T Load<T>(string key)
     {
         T save = JsonUtility.FromJson<T>(PlayerPrefs.GetString(key));
@@ -19,8 +25,9 @@ public static class SaveManager
 
     public static IEnumerator LoadAll()
     {
-        SettingData = Load<SettingData>(typeof(SettingData).ToString()) ?? new SettingData();
-        PlayerData = Load<PlayerData>(typeof(PlayerData).ToString()) ?? new PlayerData();
+        SettingData = Load<SettingData>();
+        PlayerData = Load<PlayerData>();
+        TutorialData = Load<TutorialData>();
         yield return null;
     }
 
@@ -55,4 +62,9 @@ public class SettingData
 [Serializable]
 public class PlayerData
 {
+}
+[Serializable]
+public class TutorialData
+{
+    public bool StartTutorialCompleted;
 }

@@ -13,11 +13,11 @@ public abstract class CameraController
     protected ListKeyCombination _reset;
     public void Control()
     {
-        float zoom = (_zoomIn != null ? _zoomIn.Get() : 0) - (_zoomOut != null ? _zoomOut.Get() : 0);
-        float rotate = (_rotateClockwise != null ? _rotateClockwise.Get() : 0) - (_rotateCounterclockwise != null ? _rotateCounterclockwise.Get() : 0);
-        float moveUpDown = (_moveUp != null ? _moveUp.Get() : 0) - (_moveDown != null ? _moveDown.Get() : 0);
-        float moveRightLeft = (_moveRight != null ? _moveRight.Get() : 0) - (_moveLeft != null ? _moveLeft.Get() : 0);
-        float reset = _reset != null ? _reset.Get() : 0;
+        float zoom = (_zoomIn?.Get() ?? 0) - (_zoomOut?.Get() ?? 0);
+        float rotate = (_rotateClockwise?.Get() ?? 0) - (_rotateCounterclockwise?.Get() ?? 0);
+        float moveUpDown = (_moveUp?.Get() ?? 0) - (_moveDown?.Get() ?? 0);
+        float moveRightLeft = (_moveRight?.Get() ?? 0) - (_moveLeft?.Get() ?? 0);
+        float reset = _reset?.Get() ?? 0;
 
         Zoom(zoom);
         Rotate(rotate);

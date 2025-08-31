@@ -45,8 +45,11 @@ public class PausedAnimation : MonoBehaviour
     }
     public void Show()
     {
-        if(_isFreeTransform) 
+        if (_isFreeTransform)
+        {
+            Reset();
             transform.SetParent(_parent.parent);
+        }
         if(_coroutine != null) StopCoroutine(_coroutine);
         _coroutine = StartCoroutine(IHideAnimation());
     }
@@ -62,12 +65,15 @@ public class PausedAnimation : MonoBehaviour
             Destroy(gameObject);
         else
         {
-            if (_parent)
-            {
-                transform.SetParent(_parent);
-                transform.localPosition = _originalPosition;
-                transform.localRotation = _originalRotation;
-            }
+                Reset();
         }
+    }
+
+    private void Reset()
+    {
+        if (!_parent) return;
+        transform.SetParent(_parent);
+        transform.localPosition = _originalPosition;
+        transform.localRotation = _originalRotation;
     }
 }

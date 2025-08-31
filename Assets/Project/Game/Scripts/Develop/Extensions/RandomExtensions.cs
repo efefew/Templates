@@ -38,7 +38,7 @@ public static class RandomExtensions
             max += probabilities[id];
         }
 
-        float random = UnityEngine.Random.Range(0, max);
+        float random = Random.Range(0, max);
         int result = 0;
 
         for (int id = 0; id < probabilities.Count; id++)

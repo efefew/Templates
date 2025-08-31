@@ -469,4 +469,80 @@ public static class UnityExtensions
             tr.localScale = (Vector3)scale;
         }
     }
+    
+    public static void SetInsideBorders(this Transform tr, (Vector2 min, Vector2 max) point)
+    {
+        Vector3 position = tr.position;
+
+        if (point.min.x > position.x) tr.SetPositionX(point.min.x);
+        if (point.min.y > position.y) tr.SetPositionY(point.min.y);
+        if (point.max.x < position.x) tr.SetPositionX(point.max.x);
+        if (point.max.y < position.y) tr.SetPositionY(point.max.y);
+    }
+    public static void SetInsideBorders3D(this Transform tr, (Vector2 min, Vector2 max) point)
+    {
+        Vector3 position = tr.position;
+
+        if (point.min.x > position.x) tr.SetPositionX(point.min.x);
+        if (point.min.y > position.z) tr.SetPositionZ(point.min.y);
+        if (point.max.x < position.x) tr.SetPositionX(point.max.x);
+        if (point.max.y < position.z) tr.SetPositionZ(point.max.y);
+    }
+    
+    /// <summary>
+    /// Вычисляет позицию 2D камеры, чтобы она была внутри границ
+    /// </summary>
+    /// <param name="point">Границы, за которые камера не должна выходить (мин, макс)</param>
+    /// <param name="c">Камера, над которой производят расчёты</param>
+    /// <returns>Позиция камеры внутри границ</returns>
+    private static Vector2 InsideBorders(this Camera c, (Vector2 min, Vector2 max) point)
+    {
+        (Vector2 min, Vector2 max) cameraPoint = CameraBorders(c);
+        float size = c.orthographicSize;
+        int width = Screen.width;
+        int height = Screen.height;
+        Vector2 cameraPosition = c.transform.position;
+        float wh = (float)width / height;
+        float sizeX = size, sizeY = size;
+        if ((point.max.x - point.min.x) < (cameraPoint.max.x - cameraPoint.min.x))
+            sizeX = (point.max.x - point.min.x) / (2 * wh);
+        if ((point.max.y - point.min.y) < (cameraPoint.max.y - cameraPoint.min.y))
+            sizeY = (point.max.y - point.min.y) / 2;
+        if (!Mathf.Approximately(sizeX, sizeY))
+            size = sizeX < sizeY ? sizeX : sizeY;
+        c.orthographicSize = size;
+
+        if (point.min.x > cameraPoint.min.x)
+            cameraPosition = cameraPosition.SetX(point.min.x + size * wh);
+        if (point.min.y > cameraPoint.min.y)
+            cameraPosition = cameraPosition.SetY(point.min.y + size);
+
+        if (point.max.x < cameraPoint.max.x)
+            cameraPosition = cameraPosition.SetX(point.max.x - size * wh);
+        if (point.max.y < cameraPoint.max.y)
+            cameraPosition = cameraPosition.SetY(point.max.y - size);
+        return cameraPosition;
+    }
+    /// <summary>
+    /// Вычисляет расположения углов камеры в пространстве
+    /// </summary>
+    /// <param name="camera">Камера, над которой производят расчёты</param>
+    /// <returns>Расположение углов камеры в пространстве</returns>
+    private static (Vector2, Vector2) CameraBorders(Camera camera)
+    {
+        float size = camera.orthographicSize;
+        int width = Screen.width;
+        int height = Screen.height;
+        Vector2 cameraPosition = camera.transform.position;
+        Vector2 minCameraPoint,
+            maxCameraPoint;
+        float wh = (float)width / height;
+
+        minCameraPoint.x = (-size * wh) + cameraPosition.x;
+        minCameraPoint.y = -size + cameraPosition.y;
+        maxCameraPoint.x = (size * wh) + cameraPosition.x;
+        maxCameraPoint.y = size + cameraPosition.y;
+
+        return (minCameraPoint, maxCameraPoint);
+    }
 }

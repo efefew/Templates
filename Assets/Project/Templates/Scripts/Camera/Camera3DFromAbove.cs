@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(UnityEngine.Camera))]
 public class Camera3DFromAbove : CameraOperator
 {
 
@@ -23,6 +22,7 @@ public class Camera3DFromAbove : CameraOperator
         _trCamera.position = Vector3.Lerp(_trCamera.position, _target.position, _lerpMove);
         _trCamera.eulerAngles = _target.eulerAngles.SetX(_angleX);
         _trCamera.position += ShiftCamera();
+        return;
 
         Vector3 ShiftCamera() => _trCamera.Forward(_trCamera.eulerAngles.SetX(0), -_distanceZ) + _trCamera.Forward(_trCamera.eulerAngles.SetX(_angleX), -_zoomDistance);
     }
