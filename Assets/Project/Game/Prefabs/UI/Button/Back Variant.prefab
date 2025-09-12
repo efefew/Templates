@@ -13,6 +13,14 @@ PrefabInstance:
       value: Back
       objectReference: {fileID: 0}
     - target: {fileID: 509533337692307286, guid: 3c6630a7165a70c42ba177df37c33e35, type: 3}
+      propertyPath: m_fontSize
+      value: 69
+      objectReference: {fileID: 0}
+    - target: {fileID: 509533337692307286, guid: 3c6630a7165a70c42ba177df37c33e35, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4278848010
+      objectReference: {fileID: 0}
+    - target: {fileID: 509533337692307286, guid: 3c6630a7165a70c42ba177df37c33e35, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}

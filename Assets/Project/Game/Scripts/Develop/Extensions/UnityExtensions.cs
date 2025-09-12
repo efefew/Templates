@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XInput;
@@ -29,11 +30,12 @@ public static class CoroutineExtensions
     }
 
     public static IEnumerator IDownloadData<T>(string url, Action<T> callbackOnSuccess,
-        Action<string> callbackOnError = null, bool removeTrashSymbols = false, bool wrapper = false)
+        Action<string> callbackOnError = null, bool removeTrashSymbols = false, bool wrapper = false, [CanBeNull] string nameKey = null, [CanBeNull] string valueKey = null)
     {
         url = url.Replace("http://", "https://");
         using UnityWebRequest request = UnityWebRequest.Get(url);
-
+        
+        if(nameKey != null) request.SetRequestHeader(nameKey, valueKey);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
@@ -160,11 +162,13 @@ public static class UnityExtensions
     }
 
     public static void DownloadData<T>(string url, Action<T> callbackOnSuccess, Action<string> callbackOnError = null,
-        bool removeTrashSymbols = false, bool wrapper = false)
+        bool removeTrashSymbols = false, bool wrapper = false,
+        [CanBeNull] string nameKey = null, [CanBeNull] string valueKey = null)
     {
         EntryPoint.Mono.StartCoroutine(
-            IDownloadData(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper));
+            IDownloadData(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper, nameKey, valueKey));
     }
+
 
     public static void DownloadImage(string url, Image image, Action<string> callbackOnError = null)
     {

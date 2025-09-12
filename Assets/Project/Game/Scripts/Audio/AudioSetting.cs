@@ -17,13 +17,17 @@ public class AudioSetting : MonoBehaviour
 
     [SerializeField] 
     private Slider _musicSlider, _soundsSlider;
+#if UNITY_EDITOR
     [MenuItem("Tools/Audio/Mute")]
+#endif
     public static void Mute()
     {
         SaveManager.SettingData.Music = 0;
         SaveManager.SettingData.Sound = 0;
     }
+#if UNITY_EDITOR
     [MenuItem("Tools/Audio/Unmute")]
+#endif
     public static void Unmute()
     {
         SaveManager.SettingData.Music = 1;

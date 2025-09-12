@@ -2,14 +2,18 @@ using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public static class SaveManager
 {
     public static SettingData SettingData { get; private set; }
     public static TutorialData TutorialData { get; private set; }
+    public static ControllerData ControllerData { get; private set; }
     public static PlayerData PlayerData { get; private set; }
 
+#if UNITY_EDITOR
     [MenuItem("Tools/SaveManager/DeleteAllSave")]
+#endif
     public static void DeleteAllSave() => PlayerPrefs.DeleteAll();
     public static void Delete<T>()
     {
@@ -23,18 +27,17 @@ public static class SaveManager
     }
     private static T Load<T>(string key) where T : class, new()
     {
-        T save = JsonUtility.FromJson<T>(PlayerPrefs.GetString(key)) ?? new T();
-        return save;
+        return LoadOrNull<T>(key) ?? new T();
     }
     private static T LoadOrNull<T>(string key) where T : class
     {
-        T save = JsonUtility.FromJson<T>(PlayerPrefs.GetString(key));
-        return save;
+        return JsonUtility.FromJson<T>(PlayerPrefs.GetString(key));
     }
     public static IEnumerator LoadAll()
     {
         SettingData = Load<SettingData>();
         PlayerData = Load<PlayerData>();
+        ControllerData = Load<ControllerData>();
         TutorialData = Load<TutorialData>();
         yield return null;
     }
@@ -42,17 +45,19 @@ public static class SaveManager
     {
         TextureData data = LoadOrNull<TextureData>(key);
         if (data == null) return;
-        if (!texture || data.Width != texture.width || data.Height != texture.height)
+        bool sizeMatches = texture.width == data.Width && texture.height == data.Height;
+        if (!texture || !sizeMatches)
         {
-            if (!texture || changeSize)
-            {
-                texture = new Texture2D(data.Width, data.Height, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
-            }
-            else return;
+            if (texture && !changeSize) return;
+            
+            if (!texture) Object.Destroy(texture);
+            texture = new Texture2D(data.Width, data.Height, TextureFormat.RGBA32, false)
+                { wrapMode = TextureWrapMode.Clamp };
         }
 
         Color32[] pixels = data.GetPixels();
         texture.SetPixels32(pixels);
+        /*_ = texture.LoadImage(data.Pixels);*/
         texture.Apply();
     }
     public static void Save(this Texture2D texture, string key)
@@ -68,6 +73,12 @@ public static class SaveManager
     }
 }
 
+[Serializable]
+public class ControllerData
+{
+    public PlayerControllerData PlayerData;
+    public CameraControllerData CameraData;
+}
 [Serializable]
 public class CameraControllerData
 {
@@ -124,7 +135,7 @@ public class TextureData
     }
 
     /// <summary>
-    /// Устанавливает массив пикселей из Color32[] в внутренний формат RGB.
+    /// Устанавливает массив пикселей из Color32[] во внутренний формат RGB.
     /// </summary>
     /// <param name="colors">Массив цветов пикселей.</param>
     public void SetPixels(Color32[] colors)

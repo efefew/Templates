@@ -9,12 +9,12 @@ public class UpdateLayout : MonoBehaviour
 {
     #region Fields
 
-    private ContentSizeFitter sizeFitter;
-    private GameObject gameObj;
-    private RectTransform[] rectTransforms;
-    private HorizontalOrVerticalLayoutGroup layoutGroup;
-    private ScrollRect scroll;
-    private float verticalScroll, horizontalScroll;
+    private ContentSizeFitter _sizeFitter;
+    private GameObject _gameObj;
+    private RectTransform[] _rectTransforms;
+    private HorizontalOrVerticalLayoutGroup _layoutGroup;
+    private ScrollRect _scroll;
+    private float _verticalScroll, _horizontalScroll;
 
     #endregion Fields
 
@@ -22,16 +22,16 @@ public class UpdateLayout : MonoBehaviour
 
     private void Awake()
     {
-        sizeFitter = GetComponent<ContentSizeFitter>();
+        _sizeFitter = GetComponent<ContentSizeFitter>();
         if (transform.parent.parent.parent.GetComponent<ScrollRect>())
-            scroll = transform.parent.parent.parent.GetComponent<ScrollRect>();
+            _scroll = transform.parent.parent.parent.GetComponent<ScrollRect>();
         if (transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>())
-            layoutGroup = transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
-        gameObj = gameObject;
-        LayoutGroup[] Layouts = gameObj.GetComponentsInChildren<LayoutGroup>();
-        rectTransforms = new RectTransform[Layouts.Length];
-        for (int i = 0; i < Layouts.Length; i++)
-            rectTransforms[i] = Layouts[i].GetComponent<RectTransform>();
+            _layoutGroup = transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
+        _gameObj = gameObject;
+        LayoutGroup[] layouts = _gameObj.GetComponentsInChildren<LayoutGroup>();
+        _rectTransforms = new RectTransform[layouts.Length];
+        for (int i = 0; i < layouts.Length; i++)
+            _rectTransforms[i] = layouts[i].GetComponent<RectTransform>();
     }
 
     private void OnEnable()
@@ -40,30 +40,30 @@ public class UpdateLayout : MonoBehaviour
         _ = StartCoroutine(RestartSizeFitter());
     }
 
-    public IEnumerator RestartSizeFitter()
+    private IEnumerator RestartSizeFitter()
     {
-        if (scroll)
+        if (_scroll)
         {
-            if (scroll.horizontalScrollbar) horizontalScroll = scroll.horizontalScrollbar.value;
-            if (scroll.verticalScrollbar) verticalScroll = scroll.verticalScrollbar.value;
+            if (_scroll.horizontalScrollbar) _horizontalScroll = _scroll.horizontalScrollbar.value;
+            if (_scroll.verticalScrollbar) _verticalScroll = _scroll.verticalScrollbar.value;
         }
-        sizeFitter.enabled = false;
+        _sizeFitter.enabled = false;
 
-        if (layoutGroup)
+        if (_layoutGroup)
         {
-            layoutGroup.enabled = false;
+            _layoutGroup.enabled = false;
             yield return new WaitForEndOfFrame();
-            layoutGroup.enabled = true;
+            _layoutGroup.enabled = true;
         }
 
         yield return new WaitForEndOfFrame();
-        sizeFitter.enabled = true;
-        for (int i = 0; i < rectTransforms.Length; i++)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransforms[i]);
-        if (scroll)
+        _sizeFitter.enabled = true;
+        for (int i = 0; i < _rectTransforms.Length; i++)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_rectTransforms[i]);
+        if (_scroll)
         {
-            if (scroll.horizontalScrollbar) scroll.horizontalScrollbar.value = horizontalScroll;
-            if (scroll.verticalScrollbar) scroll.verticalScrollbar.value = verticalScroll;
+            if (_scroll.horizontalScrollbar) _scroll.horizontalScrollbar.value = _horizontalScroll;
+            if (_scroll.verticalScrollbar) _scroll.verticalScrollbar.value = _verticalScroll;
         }
     }
 

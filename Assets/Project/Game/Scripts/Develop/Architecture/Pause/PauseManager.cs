@@ -9,13 +9,17 @@ public static class PauseManager
     public static List<IPause> PausedObjects { get; private set; } = new();
     public static event Action OnPause, OnResume;
     
+#if UNITY_EDITOR
     [MenuItem("Tools/PauseManager/Pause")]
+#endif
     public static void Pause()
     {
         IsPause = true;
         OnPause?.Invoke();
     }
+#if UNITY_EDITOR
     [MenuItem("Tools/PauseManager/Resume")]
+#endif
     public static void Resume()
     {
         IsPause = false;
