@@ -21,7 +21,7 @@ public static class CoroutineExtensions
     public static IEnumerator ILoadScene(SceneType scene, Action<float> callback = null)
     {
         yield return SaveManager.LoadAll();
-        AsyncOperation operation = SceneManager.LoadSceneAsync(GetNameScenes(scene));
+        AsyncOperation operation = SceneManager.LoadSceneAsync(scene.GetString());
         while (operation is { isDone: false })
         {
             callback?.Invoke(operation.progress);
@@ -125,35 +125,20 @@ public static class UnityExtensions
         return ray.GetPoint(enter);
     }
 
-    public static string GetNameScenes(SceneType scene)
+    public static string GetString<T>(this T value) where T : Enum
     {
-        return scene switch
-        {
-            SceneType.Intro => "Intro",
-            /*SceneType.Menu => "Menu",
-            SceneType.Load => "Load",
-            SceneType.Lobby => "Lobby",*/
-            SceneType.Game => "Game",
-            _ => ""
-        };
+        return value.ToString();
     }
-
-    public static SceneType GetScenes(string scene)
+    public static T TryGetEnum<T>(this string value) where T : struct, Enum
     {
-        return scene switch
-        {
-            "Intro" => SceneType.Intro,
-            /*"Menu" => SceneType.Menu,
-            "Load" => SceneType.Load,
-            "Lobby" => SceneType.Lobby,*/
-            "Game" => SceneType.Game,
-            _ => throw new ArgumentOutOfRangeException(nameof(scene), scene, null)
-        };
-    }
+        if (Enum.TryParse(value, out T result))
+            return result;
 
+        throw new ArgumentOutOfRangeException(nameof(value), value, null);
+    }
     public static SceneType GetActiveScene()
     {
-        return GetScenes(SceneManager.GetActiveScene().name);
+        return SceneManager.GetActiveScene().name.TryGetEnum<SceneType>();
     }
 
     public static void LoadScene(SceneType scene, Action<float> callback = null)
