@@ -1,18 +1,19 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XInput;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static EntryPoint;
 using static CoroutineExtensions;
 using static UnityExtensions;
 using Object = UnityEngine.Object;
+
+#endregion
 
 public static class CoroutineExtensions
 {
@@ -21,64 +22,13 @@ public static class CoroutineExtensions
     public static IEnumerator ILoadScene(SceneType scene, Action<float> callback = null)
     {
         yield return SaveManager.LoadAll();
-        AsyncOperation operation = SceneManager.LoadSceneAsync(scene.GetString());
+        AsyncOperation operation = SceneManager.LoadSceneAsync(scene.ToString());
         while (operation is { isDone: false })
         {
             callback?.Invoke(operation.progress);
             yield return null;
         }
     }
-
-    public static IEnumerator IDownloadData<T>(string url, Action<T> callbackOnSuccess,
-        Action<string> callbackOnError = null, bool removeTrashSymbols = false, bool wrapper = false, [CanBeNull] string nameKey = null, [CanBeNull] string valueKey = null)
-    {
-        url = url.Replace("http://", "https://");
-        using UnityWebRequest request = UnityWebRequest.Get(url);
-        
-        if(nameKey != null) request.SetRequestHeader(nameKey, valueKey);
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            string json = request.downloadHandler.text;
-            if (wrapper)
-                json = "{\"items\":" + json + "}";
-            if (removeTrashSymbols)
-                json = json.Replace("$", "");
-            T component = JsonUtility.FromJson<T>(json);
-            callbackOnSuccess?.Invoke(component);
-        }
-        else
-            callbackOnError?.Invoke(request.error);
-    }
-
-    public static IEnumerator IDownloadImage(string url, Image image, Action<string> callbackOnError = null)
-    {
-        url = url.Replace("http://", "https://");
-        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(new Uri(url));
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            if (image) image.sprite = DownloadHandlerTexture.GetContent(request).ToSprite();
-        }
-        else
-            callbackOnError?.Invoke(request.error);
-    }
-
-    public static IEnumerator IDownloadTexture(string url, Action<Texture2D> callbackOnSuccess,
-        Action<string> callbackOnError = null)
-    {
-        url = url.Replace("http://", "https://");
-        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(new Uri(url));
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-            callbackOnSuccess(DownloadHandlerTexture.GetContent(request));
-        else
-            callbackOnError?.Invoke(request.error);
-    }
-
     public static IEnumerator ITemporaryVibration(this XInputController xbox, float lowFrequency, float highFrequency,
         float duration)
     {
@@ -125,10 +75,6 @@ public static class UnityExtensions
         return ray.GetPoint(enter);
     }
 
-    public static string GetString<T>(this T value) where T : Enum
-    {
-        return value.ToString();
-    }
     public static T TryGetEnum<T>(this string value) where T : struct, Enum
     {
         if (Enum.TryParse(value, out T result))
@@ -136,6 +82,7 @@ public static class UnityExtensions
 
         throw new ArgumentOutOfRangeException(nameof(value), value, null);
     }
+
     public static SceneType GetActiveScene()
     {
         return SceneManager.GetActiveScene().name.TryGetEnum<SceneType>();
@@ -146,29 +93,8 @@ public static class UnityExtensions
         EntryPoint.Mono.StartCoroutine(ILoadScene(scene, callback));
     }
 
-    public static void DownloadData<T>(string url, Action<T> callbackOnSuccess, Action<string> callbackOnError = null,
-        bool removeTrashSymbols = false, bool wrapper = false,
-        [CanBeNull] string nameKey = null, [CanBeNull] string valueKey = null)
-    {
-        EntryPoint.Mono.StartCoroutine(
-            IDownloadData(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper, nameKey, valueKey));
-    }
-
-
-    public static void DownloadImage(string url, Image image, Action<string> callbackOnError = null)
-    {
-        EntryPoint.Mono.StartCoroutine(IDownloadImage(url, image, callbackOnError));
-    }
-
-    public static void DownloadTexture(string url, Action<Texture2D> callbackOnSuccess,
-        Action<string> callbackOnError = null)
-    {
-        EntryPoint.Mono.StartCoroutine(IDownloadTexture(url, callbackOnSuccess, callbackOnError));
-    }
-
-
     /// <summary>
-    /// Ищет min x, min y, max x, max y
+    ///     Ищет min x, min y, max x, max y
     /// </summary>
     /// <param name="points">точки</param>
     /// <returns>min x, min y, max x, max y</returns>
@@ -205,19 +131,8 @@ public static class UnityExtensions
         return values.Any(text.Contains);
     }
 
-    public static Texture2D ToTexture2D(this byte[] bytes)
-    {
-        Texture2D texture = new(2, 2);
-        _ = texture.LoadImage(bytes);
-        texture.Apply();
-        return texture;
-    }
-
-    public static Sprite ToSprite(this Texture2D tex) => Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height),
-        new Vector2(0.5f, 0.5f), 100.0f);
-
     /// <summary>
-    /// Таймер
+    ///     Таймер
     /// </summary>
     /// <param name="timer">Значение таймера</param>
     /// <returns>Значение таймера равно нулю и не изменилось?</returns>
@@ -238,7 +153,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    /// Получить угол слежения за целью только по оси Y
+    ///     Получить угол слежения за целью только по оси Y
     /// </summary>
     /// <param name="transform">следящий</param>
     /// <param name="target">цель</param>
@@ -253,7 +168,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    /// Следить за целью только по оси Y
+    ///     Следить за целью только по оси Y
     /// </summary>
     /// <param name="transform">следящий</param>
     /// <param name="target">цель</param>
@@ -264,7 +179,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    /// Следить за целью (2D версия)
+    ///     Следить за целью (2D версия)
     /// </summary>
     /// <param name="transform">следящий</param>
     /// <param name="target">цель</param>
@@ -277,7 +192,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    /// Попробовать получить значение другого типа
+    ///     Попробовать получить значение другого типа
     /// </summary>
     /// <typeparam name="T">Другой тип</typeparam>
     /// <param name="obj">Исходное значение</param>
@@ -309,51 +224,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    /// Проверяет, находится ли указатель мыши над UI-элементом, принадлежащим  Canvas.
-    /// </summary>
-    /// <param name="canvas">Canvas, над которым нужно проверить указатель.</param>
-    /// <returns>true, если указатель над UI, false иначе.</returns>
-    public static bool IsPointerOverUI(Canvas canvas)
-    {
-        if (!EventSystem.current) return false;
-
-        GraphicRaycaster gr = canvas.GetComponent<GraphicRaycaster>();
-        if (!gr) return false;
-
-        PointerEventData data = new(EventSystem.current)
-        {
-            position = Input.mousePosition
-        };
-
-        List<RaycastResult> results = new();
-        gr.Raycast(data, results);
-        return results.Count > 0;
-    }
-
-    /// <summary>
-    /// Проверяет, находится ли указатель мыши над объектом UI.
-    /// </summary>
-    /// <returns>Находится ли указатель мыши над объектом UI</returns>
-    public static bool IsPointerOverUI()
-    {
-        // Создаём экземпляр PointerEventData с текущим положением указателя мыши.
-        PointerEventData eventDataCurrentPosition = new(EventSystem.current)
-        {
-            position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
-        };
-
-        List<RaycastResult> results = new();
-
-        // Выполняем лучевой кастинг для всех объектов в текущей позиции указателя мыши.
-        // Результаты сохраняются в списке results.
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-
-        // Если количество результатов больше нуля, значит указатель мыши находится над объектом UI.
-        return results.Count > 0;
-    }
-
-    /// <summary>
-    /// Находится ли объект в пределах экрана и не перекрыт
+    ///     Находится ли объект в пределах экрана и не перекрыт
     /// </summary>
     /// <param name="transform">объект</param>
     /// <param name="camera">камера</param>
@@ -380,7 +251,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    ///  Находится ли объект в пределах экрана
+    /// Находится ли объект в пределах экрана
     /// </summary>
     /// <param name="position">объект</param>
     /// <param name="camera">камера</param>
@@ -409,7 +280,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    ///  Находится ли объект в пределах экрана
+    ///     Находится ли объект в пределах экрана
     /// </summary>
     /// <param name="position">объект</param>
     /// <param name="camera">камера</param>
@@ -429,7 +300,7 @@ public static class UnityExtensions
     }
 
     /// <summary>
-    /// Проверка пересечения с Frustum камеры 
+    ///     Проверка пересечения с Frustum камеры
     /// </summary>
     /// <param name="renderer">объект</param>
     /// <param name="camera">frustum камера</param>
@@ -458,7 +329,7 @@ public static class UnityExtensions
             tr.localScale = (Vector3)scale;
         }
     }
-    
+
     public static void SetInsideBorders(this Transform tr, (Vector2 min, Vector2 max) point)
     {
         Vector3 position = tr.position;
@@ -468,6 +339,7 @@ public static class UnityExtensions
         if (point.max.x < position.x) tr.SetPositionX(point.max.x);
         if (point.max.y < position.y) tr.SetPositionY(point.max.y);
     }
+
     public static void SetInsideBorders3D(this Transform tr, (Vector2 min, Vector2 max) point)
     {
         Vector3 position = tr.position;
@@ -477,9 +349,9 @@ public static class UnityExtensions
         if (point.max.x < position.x) tr.SetPositionX(point.max.x);
         if (point.max.y < position.z) tr.SetPositionZ(point.max.y);
     }
-    
+
     /// <summary>
-    /// Вычисляет позицию 2D камеры, чтобы она была внутри границ
+    ///     Вычисляет позицию 2D камеры, чтобы она была внутри границ
     /// </summary>
     /// <param name="point">Границы, за которые камера не должна выходить (мин, макс)</param>
     /// <param name="c">Камера, над которой производят расчёты</param>
@@ -512,8 +384,9 @@ public static class UnityExtensions
             cameraPosition = cameraPosition.SetY(point.max.y - size);
         return cameraPosition;
     }
+
     /// <summary>
-    /// Вычисляет расположения углов камеры в пространстве
+    ///     Вычисляет расположения углов камеры в пространстве
     /// </summary>
     /// <param name="camera">Камера, над которой производят расчёты</param>
     /// <returns>Расположение углов камеры в пространстве</returns>

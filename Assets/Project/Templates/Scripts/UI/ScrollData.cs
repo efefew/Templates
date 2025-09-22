@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityExtensions;
+using static DataExtensions;
 
 public abstract class ScrollData<T> : MonoBehaviour
 {
