@@ -1,37 +1,75 @@
-using UnityEngine;
+#region
 
-[RequireComponent(typeof(RectTransform))]
+using UnityEngine;
+using UnityEngine.UI;
+
+#endregion
+
 public class Marker : MonoBehaviour
 {
-    [SerializeField] private CameraOperator _camera; // Камера, относительно которой позиционируется иконка
+    /// <summary>
+    ///     Камера, относительно которой позиционируется иконка
+    /// </summary>
+    [SerializeField] private CameraOperator _camera;
 
-    [SerializeField] private Transform _target; // Объект в мировом пространстве
-    [SerializeField] [Min(0)] private float _offset = 50f; // Отступ от края экрана (в пикселях)
+    /// <summary>
+    ///     Объект в мировом пространстве
+    /// </summary>
+    [SerializeField] private Transform _target;
 
-    private RectTransform _iconRect;
+    /// <summary>
+    ///     Отступ от края экрана (в пикселях)
+    /// </summary>
+    [SerializeField, Min(0)] private float _offset;
+    [SerializeField, Min(0)] private float _addOffsetLeftUp;
+
+    /// <summary>
+    ///     Отступ от точки
+    /// </summary>
+    [SerializeField] private Vector3 _offsetPosition;
+
+    [SerializeField] private GameObject _markerObject;
+    [SerializeField] private Image _centerImage;
     [SerializeField] private Transform _arrow;
+    [SerializeField] private bool _showCenterOutside;
+    private RectTransform _iconRect;
 
-    void Start()
+    private void Start()
     {
         _iconRect = GetComponent<RectTransform>();
+        _markerObject.gameObject.SetActive(_target);
         _camera.OnUpdatePosition += UpdateMarkerPosition;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         _camera.OnUpdatePosition -= UpdateMarkerPosition;
     }
 
-    public void UpdateTarget(Vector3 target)
+    public void ClearTarget()
     {
-        _target.position = target;
+        _target = null;
+        _markerObject.gameObject.SetActive(false);
+    }
+
+    public void SetTarget(Transform target, Vector3 offsetPosition)
+    {
+        _offsetPosition = offsetPosition;
+        _target = target;
+        _markerObject.gameObject.SetActive(_target);
+        UpdateMarkerPosition();
     }
 
     private void UpdateMarkerPosition()
     {
-        bool isOnScreen = _target.position.IsVisibleFrom(_camera.Camera, true, true, out Vector3 screenPos);
+        if (!_target) return;
+
+        bool isOnScreen =
+            (_target.position + _offsetPosition).IsVisibleFrom(_camera.Camera, true, true, out Vector3 screenPos);
 
         if (_arrow) _arrow.gameObject.SetActive(!isOnScreen);
+        if (!_showCenterOutside) _centerImage.enabled = isOnScreen;
+
         if (isOnScreen)
         {
             // Если объект на экране, размещаем иконку поверх него
@@ -61,12 +99,12 @@ public class Marker : MonoBehaviour
         float slope = Mathf.Tan(angle);
 
         // Вычисляем позицию на краю экрана с учетом отступа
-        float x = dir.x > 0 ? Screen.width - _offset : _offset;
+        float x = dir.x > 0 ? Screen.width - _offset : _offset + _addOffsetLeftUp;
         float y = screenCenter.y + slope * (x - screenCenter.x);
 
-        if (y > Screen.height - _offset)
+        if (y > Screen.height - _offset - _addOffsetLeftUp)
         {
-            y = Screen.height - _offset;
+            y = Screen.height - _offset - _addOffsetLeftUp;
             x = screenCenter.x + (y - screenCenter.y) / slope;
         }
         else if (y < _offset)
@@ -78,7 +116,7 @@ public class Marker : MonoBehaviour
         return new Vector3(x, y, 0);
     }
 
-    private void RotateIconTowardsTarget(Transform tr, Vector3 screenPos)
+    private static void RotateIconTowardsTarget(Transform tr, Vector3 screenPos)
     {
         if (!tr) return;
         // Направление от центра экрана к объекту

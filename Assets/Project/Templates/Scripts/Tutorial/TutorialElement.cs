@@ -4,33 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-public abstract class TutorialElement
+public abstract class TutorialElement<TUI> where TUI : TutorialUI
 {
-    public enum ShowButtonType
+    protected enum ShowButtonType
     {
+        NONE,
         /// <summary>
         /// Дублирование через Instantiate. Кнопка иногда может оказаться в неправильном месте
         /// </summary>
-        Clone,
+        CLONE,
         /// <summary>
         /// Перемещение заменой родителя. Наименее ресурсозатратная операция, но кнопка может оказаться в неправильном месте
         /// </summary>
-        Move,
+        MOVE,
         /// <summary>
         /// Перемещение заменой родителя с учётом всяких LayoutGroup. Самая ресурсозатратная операция, но зато кнопка всегда в правильном месте
         /// </summary>
-        ForceMove 
+        FORCE_MOVE 
     }
     public enum EmotionType
     {
-        Default,
-        Fun,
-        Sad,
-        None
+        DEFAULT,
+        FUN,
+        SAD,
+        NONE
     }
 
-    protected Tutorial _tutorial;
-    protected TutorialElement(Tutorial tutorial)
+    protected Tutorial<TUI> _tutorial;
+    protected TutorialElement(Tutorial<TUI> tutorial)
     {
         _tutorial = tutorial;
     }
@@ -41,7 +42,15 @@ public abstract class TutorialElement
         _tutorial.UI.TutorialObj.SetActive(true);
         EntryPoint.Mono.StartCoroutine(ITutorial());
     }
-
+    protected void EndTutorial()
+    {
+        SaveManager.Save(SaveManager.TutorialData);
+        _tutorial.UI.TutorialObj.SetActive(false);
+    }
+    protected virtual void OnDestroy()
+    {
+        _tutorial.UI.OnDestroyTutorialUI -= OnDestroy;
+    }
     private void SetMessageListener(Button button, bool on)
     {
         if (on)
@@ -54,23 +63,25 @@ public abstract class TutorialElement
         }
     }
 
-    private void Send(string message, EmotionType emotion = EmotionType.Default)
+    private void Send(string message, EmotionType emotion = EmotionType.DEFAULT)
     {
         _tutorial.UI.MessageLabel.text = message;
     }
     protected abstract IEnumerator ITutorial();    
-    protected void EndTutorial()
+    protected WaitUntil WaitClickOnMarker(Action action, string message = null, EmotionType person = EmotionType.NONE)
     {
-        SaveManager.Save(SaveManager.TutorialData);
-        _tutorial.UI.TutorialObj.SetActive(false);
+        _tutorial.UI.MessageObj.SetActive(true);
+        Send(message, person);
+        _tutorial.StepCompleted = false;
+        return new WaitUntil(MarkerClickComplete(action));
     }
-    protected WaitUntil WaitMessage(string message, EmotionType emotion = EmotionType.Default)
+    protected WaitUntil WaitMessage(string message, EmotionType emotion = EmotionType.DEFAULT)
     {
         return WaitClick(_tutorial.UI.MessageButton, message, emotion);
     }
-    protected WaitUntil WaitClick(Button button, string message = null, EmotionType person = EmotionType.None, bool block = true, ShowButtonType showButtonType = ShowButtonType.Move)
+    protected WaitUntil WaitClick(Button button, string message = null, EmotionType person = EmotionType.NONE, bool block = true, ShowButtonType showButtonType = ShowButtonType.MOVE)
     {
-        Button buttonClone = showButtonType is ShowButtonType.Clone ? Object.Instantiate(button, _tutorial.UI.WaitButtonsContainer) : button;
+        Button buttonClone = showButtonType is ShowButtonType.CLONE ? Object.Instantiate(button, _tutorial.UI.WaitButtonsContainer) : button;
         if (message != null)
         {
             if (!block)
@@ -95,25 +106,41 @@ public abstract class TutorialElement
     {
         switch (showButtonType)
         {
-            case ShowButtonType.Clone:
+            case ShowButtonType.CLONE:
                 return new WaitUntil(ClickComplete(buttonClone));
-            case ShowButtonType.Move:
+            case ShowButtonType.MOVE:
             {
                 int oldID = button.transform.GetSiblingIndex();
                 Transform oldParent = button.transform.parent;
                 button.transform.SetParent(_tutorial.UI.WaitButtonsContainer, worldPositionStays: true);
                 return new WaitUntil(ClickComplete(buttonClone, oldParent, oldID));
             }
-            case ShowButtonType.ForceMove:
+            case ShowButtonType.FORCE_MOVE:
             {
                 int oldID = button.transform.GetSiblingIndex();
                 Transform oldParent = button.transform.parent;
                 button.GetComponent<RectTransform>().ForceChangeParentUI(_tutorial.UI.WaitButtonsContainer);
                 return new WaitUntil(ClickComplete(buttonClone, oldParent, oldID));
             }
+            case ShowButtonType.NONE:
+                return new WaitUntil(ClickComplete(button));
             default:
                 throw new ArgumentOutOfRangeException(nameof(showButtonType), showButtonType, null);
         }
+    }
+    private Func<bool> MarkerClickComplete(Action action)
+    {
+        return ()=>
+        {
+            if (_tutorial.StepCompleted)
+            {
+                action?.Invoke();
+                _tutorial.UI.MessageObj.SetActive(false);
+                _tutorial.UI.BlockObj.SetActive(false);
+            }
+            
+            return _tutorial.StepCompleted;
+        };
     }
     private Func<bool> ClickComplete(Button button, Transform oldParent, int oldID)
     {

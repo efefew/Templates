@@ -4,21 +4,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tutorial
+public abstract class Tutorial<TUI> where TUI : TutorialUI
 {
-    public Dictionary<Type, TutorialElement> Tutorials { get; } = new ();
-    public TutorialUI UI { get; }
+    protected Dictionary<Type, TutorialElement<TUI>> _tutorials;
+    public TutorialConfig Config { get; }
+    public TUI UI { get; }
 
     public bool StepCompleted { get; set; }
     public void NextStep() => StepCompleted = true;
-    public Tutorial(TutorialUI ui)
+    protected Tutorial(TUI ui)
     {
+        SaveManager.LoadTutorial();
         UI = ui;
-        AddTutorials();
+        Config = ui.TutorialConfig;
     }
-
-    private void AddTutorials()
-    {
-        Tutorials.Add(typeof(StartTutorialElement), new StartTutorialElement(this));
-    }
+    protected abstract void AddTutorials();
 }

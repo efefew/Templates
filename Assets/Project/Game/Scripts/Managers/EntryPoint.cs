@@ -16,8 +16,8 @@ public abstract class EntryPoint
     {
         Mono = new GameObject("EntryPoint").AddComponent<MonoEntryPoint>();
         Object.DontDestroyOnLoad(Mono);
-        if (GetActiveScene() != TARGET_SCENE) LoadScene(TARGET_SCENE);
-        else Mono.StartCoroutine(SaveManager.LoadAll());
+        /*if (GetActiveScene() != TARGET_SCENE) LoadScene(TARGET_SCENE);
+        else */Mono.StartCoroutine(SaveManager.LoadAll());
     }
 
     public class MonoEntryPoint : MonoBehaviour

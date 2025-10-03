@@ -41,6 +41,10 @@ public static class SaveManager
         TutorialData = Load<TutorialData>();
         yield return null;
     }
+    public static void LoadTutorial()
+    {
+        TutorialData = Load<TutorialData>();
+    }
     public static void Save<T>(T save) where T : class
     {
         string key = typeof(T).ToString();
