@@ -65,7 +65,7 @@ public class Marker : MonoBehaviour
         if (!_target) return;
 
         bool isOnScreen =
-            (_target.position + _offsetPosition).IsVisibleFrom(_camera.Camera, true, true, out Vector3 screenPos);
+            _camera.Camera.IsVisibleFrom(_target.position + _offsetPosition, true, true, out Vector3 screenPos);
 
         if (_arrow) _arrow.gameObject.SetActive(!isOnScreen);
         if (!_showCenterOutside) _centerImage.enabled = isOnScreen;
