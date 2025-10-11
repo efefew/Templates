@@ -1,35 +1,30 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using TMPro;
+using UnityEngine;
+using AYellowpaper.SerializedCollections;
 
-[RequireComponent(typeof(Text))]
+[RequireComponent(typeof(TMP_Text))]
 public class MultipleLanguageLabel : MonoBehaviour, IMultipleLanguage
 {
-    #region Fields
+    private TMP_Text _label;
+    public SerializedDictionary<Language.LanguageType, string> TranslatedText  { get; private set; } = new ();
 
-    private Text label;
-    public string[] textOnTargetLanguage = new string[Language.countLanguage];
-
-    #endregion Fields
-
-    #region Methods
-
-    private void Awake() => label = GetComponent<Text>();
+    private void Awake() => _label = GetComponent<TMP_Text>();
 
     private void OnEnable()
     {
-        OnChangeLanguage(Language.language);
-        Language.eventChangeLanguage -= OnChangeLanguage;
-        Language.eventChangeLanguage += OnChangeLanguage;
+        OnChangeLanguage(Language.Type);
+        Language.EventChangeLanguage += OnChangeLanguage;
     }
 
-    private void OnDisable() => Language.eventChangeLanguage -= OnChangeLanguage;
+    private void OnDisable() => Language.EventChangeLanguage -= OnChangeLanguage;
 
     public void OnChangeLanguage(Language.LanguageType language)
     {
-        if (textOnTargetLanguage.Length <= (int)language)
+        if (!TranslatedText.ContainsKey(language))
+        {
+            _label.text = TranslatedText[Language.LanguageType.ENGLISH];
             return;
-        label.text = textOnTargetLanguage[(int)language];
+        }
+        _label.text = TranslatedText[language];
     }
-
-    #endregion Methods
 }

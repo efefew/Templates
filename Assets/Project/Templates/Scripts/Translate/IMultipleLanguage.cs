@@ -3,73 +3,49 @@
 /// </summary>
 public interface IMultipleLanguage
 {
-    #region Methods
-
     /// <summary>
     /// При изменении языка
     /// </summary>
-    /// <param name="language">выбранный язык</param>
+    /// <param name="language">Выбранный язык</param>
     void OnChangeLanguage(Language.LanguageType language);
-
-    #endregion Methods
 }
 
 public static class Language
 {
-    #region Events
-
-    public static event DelegateChangeLanguage eventChangeLanguage;
-
-    #endregion Events
-
-    #region Delegates
-
+    public static event DelegateChangeLanguage EventChangeLanguage;
     public delegate void DelegateChangeLanguage(LanguageType language);
-
-    #endregion Delegates
-
-    #region Enums
 
     public enum LanguageType
     {
-        russian,
-        english
+        ENGLISH,
+        RUSSIAN,
+        SPANISH,
+        FRENCH,
+        GERMAN,
+        JAPAN,
+        CHINESE
     }
-
-    #endregion Enums
-
-    #region Properties
-
-    public static LanguageType language
+    public static LanguageType Type
     {
-        get => languageValue;    // возвращаем значение свойства
+        get => _languageValue;
         set
         {
             OnChangeLanguage(value);
-            languageValue = value;   // устанавливаем новое значение свойства
+            _languageValue = value;
         }
     }
 
-    #endregion Properties
+    private static LanguageType _languageValue;
+    public const int COUNT_LANGUAGE = 2;
 
-    #region Fields
-
-    private static LanguageType languageValue;
-    public const int countLanguage = 2;
-
-    #endregion Fields
-
-    #region Methods
 
     /// <summary>
     /// При изменении языка
     /// </summary>
     private static void OnChangeLanguage(LanguageType newLanguage)
     {
-        if (newLanguage == language)
+        if (newLanguage == Type)
             return;
-        eventChangeLanguage?.Invoke(newLanguage);
+        EventChangeLanguage?.Invoke(newLanguage);
     }
-
-    #endregion Methods
 }
