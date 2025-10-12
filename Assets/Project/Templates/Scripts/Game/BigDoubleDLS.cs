@@ -4,14 +4,11 @@ namespace BreakInfinity
 {
     public partial struct BigDouble
     {
-        public BigDouble Clamp(BigDouble min, BigDouble max)
-        {
-            if (min > max)
-            {
-                (min, max) = (max, min);
-            }
-
-            return this > max ? max : this < min ? min : this;
+        public BigDouble Clamp(BigDouble delta, BigDouble min, BigDouble max)
+        {        
+            if (delta < Zero && this > max) return max;
+            if (delta > Zero && this < min) return min;
+            return this;
         }
         public bool TryConvertToFloat(out float result)
         {
