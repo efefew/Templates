@@ -7,17 +7,17 @@ public class Singleton<T>: MonoBehaviour where T : Singleton<T>
     {
         get
         {
-            if (_cachedInstance == null)
+            if (!_cachedInstance)
             {
                 _cachedInstance = FindAnyObjectByType<T>();
 
-                if (_cachedInstance == null)
+                if (!_cachedInstance)
                 {
                     Debug.LogWarning($"There is no instance of {typeof(T).Name}");
                     return null;
                 }
 				
-                DontDestroyOnLoad(_cachedInstance.gameObject);
+                /*DontDestroyOnLoad(_cachedInstance.gameObject);*/
             }
 
             return _cachedInstance;
