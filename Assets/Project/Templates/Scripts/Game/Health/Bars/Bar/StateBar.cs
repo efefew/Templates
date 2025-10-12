@@ -29,7 +29,6 @@ public abstract class StateBar
     {
         Value -= deltaValue;
         Value = Value.Clamp(deltaValue, BigDouble.Zero, MaxValue);
-        Debug.Log(Value + " " + deltaValue);
         OnChanged?.Invoke(this);
         if(Value == BigDouble.Zero) OnEmpty?.Invoke(this);
     }

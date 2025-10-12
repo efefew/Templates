@@ -11,17 +11,15 @@ public class SliderBarUI : MonoBehaviour
     [SerializeField] private float _lerpTempFill = 0.1f;
     [SerializeField] private float _timeTempFill = 1f;
     [SerializeField] private float _minDelta = 1f;
-
     private StateBar _stateBar;
     private Slider _slider;
-    /*private RectTransform _rectTransform;*/
     private Animation _animation;
     private float _maxWidth, _width;
     private Coroutine _coroutineChangeTempFill;
     private DateTime _lastChange;
     private void Awake()
     {
-        /*_rectTransform = GetComponent<RectTransform>();*/
+        _maxWidth = GetComponent<RectTransform>().sizeDelta.x;
         _slider = GetComponent<Slider>();
         TryGetComponent(out _animation);
     }
@@ -52,16 +50,12 @@ public class SliderBarUI : MonoBehaviour
     }
     private void OnChangedValue(StateBar stateBar)
     {
-        /*_slider.maxValue = stateBar.MaxValue;
-        _maxWidth = Mathf.Max(65, stateBar.MaxValue * 5);
-        _rectTransform.sizeDelta = _rectTransform.sizeDelta.SetX(_maxWidth);
-        _slider.value = stateBar.Value;*/
         _slider.maxValue = 1;
         if ((stateBar.Value / stateBar.MaxValue).TryConvertToFloat(out float f))
             _slider.value = f;
         _animation.Play("On Take Damage");
         
-        if(!_tempFill) return;
+        if(_tempFill == null) return;
         _lastChange = DateTime.Now.AddSeconds(_timeTempFill);
         _coroutineChangeTempFill ??= StartCoroutine(IChangeTempFill());
     }

@@ -66,7 +66,7 @@ public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
     [field:SerializeField, SerializedDictionary("Тип урона", "Сопротивляемость")]
     public SerializedDictionary<DamageType, float> Resists  { get; private set; } = new ();
 
-    [field:SerializeField] public List<HealthBar> Bars { get; private set; } = new ();
+    [field: SerializeField]  public List<HealthBar> Bars { get; private set; } = new ();
     [SerializeField] private List<HealthBarConfiguration> _configuration;
     private void Start()
     {
@@ -113,7 +113,7 @@ public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
     {
         HealthBar emptyHealthBar = (HealthBar)bar;
         
-        bool allBarsEmpty = Bars.All(healthBar => healthBar.Value == BigDouble.Zero);
+        bool allBarsEmpty = Bars.All(healthBar => healthBar.Value == 0);
         if (emptyHealthBar.Configuration.Destroyable)
         {
             emptyHealthBar.OnEmpty -= OnEmpty;
