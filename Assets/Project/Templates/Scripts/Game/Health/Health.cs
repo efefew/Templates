@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using BreakInfinity;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -65,7 +66,7 @@ public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
     [field:SerializeField, SerializedDictionary("Тип урона", "Сопротивляемость")]
     public SerializedDictionary<DamageType, float> Resists  { get; private set; } = new ();
 
-    public List<HealthBar> Bars { get; private set; } = new ();
+    [field:SerializeField] public List<HealthBar> Bars { get; private set; } = new ();
     [SerializeField] private List<HealthBarConfiguration> _configuration;
     private void Start()
     {
@@ -88,14 +89,14 @@ public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
     /// </summary>
     /// <param name="type">тип урона</param>
     /// <param name="damage">урон</param>
-    public void TakeDamage(DamageType type, float damage)
+    public void TakeDamage(DamageType type, BigDouble damage)
     {
         if (Resists.TryGetValue(type, out float resist))
-            damage *= (FULL_RESIST - resist) / FULL_RESIST;
+            damage *= new BigDouble((FULL_RESIST - resist) / FULL_RESIST);
 
         for (int i = Bars.Count - 1; i >= 0; i--)
         {
-            if (Bars[i].Value > 0)
+            if (Bars[i].Value > BigDouble.Zero)
             {
                 Bars[i].TryChangeValue(type, damage);
                 break;
@@ -112,7 +113,7 @@ public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
     {
         HealthBar emptyHealthBar = (HealthBar)bar;
         
-        bool allBarsEmpty = Bars.All(healthBar => healthBar.Value == 0);
+        bool allBarsEmpty = Bars.All(healthBar => healthBar.Value == BigDouble.Zero);
         if (emptyHealthBar.Configuration.Destroyable)
         {
             emptyHealthBar.OnEmpty -= OnEmpty;

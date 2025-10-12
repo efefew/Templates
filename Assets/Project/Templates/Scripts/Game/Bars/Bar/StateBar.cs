@@ -1,11 +1,12 @@
 using System;
+using BreakInfinity;
 using UnityEngine;
-
+[Serializable]
 public abstract class StateBar
 {
-    public float Value { get; protected set; }
-    public float MaxValue { get; protected set; }
-    public StateBarConfiguration Configuration { get; protected set; }
+    [field:SerializeField] public BigDouble Value { get; protected set; }
+    [field:SerializeField] public BigDouble MaxValue { get; protected set; }
+    [field:NonSerialized] public StateBarConfiguration Configuration { get; protected set; }
     public event Action<StateBar> OnEmpty, OnChanged;
     protected StateBar(StateBarConfiguration configuration)
     {
@@ -17,18 +18,19 @@ public abstract class StateBar
         MaxValue = Configuration.MaxValue;
         Value = MaxValue;
     }
-    public void ChangeMax(float maxValue)
+    public void ChangeMax(BigDouble maxValue)
     {
-        if (maxValue <= 0) return;
+        if (maxValue <= BigDouble.Zero) return;
         MaxValue = maxValue;
         OnChanged?.Invoke(this);
     }
 
-    public virtual void TryChangeValue(float deltaValue)
+    public virtual void TryChangeValue(BigDouble deltaValue)
     {
         Value -= deltaValue;
-        Value = Mathf.Clamp(Value, 0, MaxValue);
+        Value = Value.Clamp(deltaValue, BigDouble.Zero, MaxValue);
+        Debug.Log(Value + " " + deltaValue);
         OnChanged?.Invoke(this);
-        if(Value == 0) OnEmpty?.Invoke(this);
+        if(Value == BigDouble.Zero) OnEmpty?.Invoke(this);
     }
 }

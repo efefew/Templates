@@ -1,9 +1,6 @@
-
-
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public class SliderBarUI : MonoBehaviour
@@ -17,14 +14,14 @@ public class SliderBarUI : MonoBehaviour
 
     private StateBar _stateBar;
     private Slider _slider;
-    private RectTransform _rectTransform;
+    /*private RectTransform _rectTransform;*/
     private Animation _animation;
     private float _maxWidth, _width;
     private Coroutine _coroutineChangeTempFill;
     private DateTime _lastChange;
     private void Awake()
     {
-        _rectTransform = GetComponent<RectTransform>();
+        /*_rectTransform = GetComponent<RectTransform>();*/
         _slider = GetComponent<Slider>();
         TryGetComponent(out _animation);
     }
@@ -55,13 +52,16 @@ public class SliderBarUI : MonoBehaviour
     }
     private void OnChangedValue(StateBar stateBar)
     {
-        _slider.maxValue = stateBar.MaxValue;
+        /*_slider.maxValue = stateBar.MaxValue;
         _maxWidth = Mathf.Max(65, stateBar.MaxValue * 5);
         _rectTransform.sizeDelta = _rectTransform.sizeDelta.SetX(_maxWidth);
-        _slider.value = stateBar.Value;
+        _slider.value = stateBar.Value;*/
+        _slider.maxValue = 1;
+        if ((stateBar.Value / stateBar.MaxValue).TryConvertToFloat(out float f))
+            _slider.value = f;
         _animation.Play("On Take Damage");
         
-        if(_tempFill == null) return;
+        if(!_tempFill) return;
         _lastChange = DateTime.Now.AddSeconds(_timeTempFill);
         _coroutineChangeTempFill ??= StartCoroutine(IChangeTempFill());
     }
