@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.Events;
-using static PauseManager;
 
 public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
 {

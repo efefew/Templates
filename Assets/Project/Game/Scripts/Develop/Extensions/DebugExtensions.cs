@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -162,6 +161,10 @@ public static class DebugExtensions
             case TypeCode.Byte:
             case TypeCode.SByte:
                 return Convert.ToString(value, CultureInfo.InvariantCulture);
+            case TypeCode.DateTime:
+            case TypeCode.DBNull:
+            case TypeCode.Empty:
+            case TypeCode.Object:
             default:
                 // Для неопознанных типов — попытаться вывести ToString в комментарии или использовать default(T)
                 string repr = value.ToString();
