@@ -26,16 +26,14 @@ public class GraphCreator : MonoBehaviour
     [SerializeField]
     private float _minAxisX, _minAxisY, _maxAxisX, _maxAxisY;
     
-    private ValueConteiner _targetValueX, _targetValueY;
+    private ValueContainer _targetValueX, _targetValueY;
     [SerializeField]
     private Transform _tr;
     [SerializeField]
-    private ValueConteiner _valuePrefabX, _valuePrefabY;
+    private ValueContainer _valuePrefabX, _valuePrefabY;
 
     private Camera _c;
 
-
-    #region Methods
 
     private void Start()
     {
@@ -49,7 +47,7 @@ public class GraphCreator : MonoBehaviour
     /// <param name="min"></param>
     /// <param name="max"></param>
     /// <returns></returns>
-    private float ConvertToOtherSystem(float value, float min, float max) => (value * (max - min)) + min;
+    private static float ConvertToOtherSystem(float value, float min, float max) => (value * (max - min)) + min;
 
     private void OnGUI()
     {
@@ -77,33 +75,33 @@ public class GraphCreator : MonoBehaviour
         if (_pos.x < _globalAxisZero.x)
         {
             _targetValueX.transform.position = new Vector2(_globalAxisZero.x, _globalAxisZero.y);
-            _targetValueX.text.text = Round(_minAxisX, 2);
+            _targetValueX.Text.text = Round(_minAxisX, 2);
         }
         else if (_pos.x > _globalAxisX)
         {
             _targetValueX.transform.position = new Vector2(_globalAxisX, _globalAxisZero.y);
-            _targetValueX.text.text = Round(_maxAxisX, 2);
+            _targetValueX.Text.text = Round(_maxAxisX, 2);
         }
         else
         {
             _targetValueX.transform.position = new Vector2(_pos.x, _globalAxisZero.y);
-            _targetValueX.text.text = Round(ConvertToOtherSystem((_pos.x / _globalAxisX) - _globalAxisZero.x, _minAxisX, _maxAxisX), 2);
+            _targetValueX.Text.text = Round(ConvertToOtherSystem((_pos.x / _globalAxisX) - _globalAxisZero.x, _minAxisX, _maxAxisX), 2);
         }
 
         if (_pos.y < _globalAxisZero.y)
         {
             _targetValueY.transform.position = new Vector2(_globalAxisZero.x, _globalAxisZero.y);
-            _targetValueY.text.text = Round(_minAxisY, 2);
+            _targetValueY.Text.text = Round(_minAxisY, 2);
         }
         else if (_pos.y > _globalAxisY)
         {
             _targetValueY.transform.position = new Vector2(_globalAxisZero.x, _globalAxisY);
-            _targetValueY.text.text = Round(_maxAxisY, 2);
+            _targetValueY.Text.text = Round(_maxAxisY, 2);
         }
         else
         {
             _targetValueY.transform.position = new Vector2(_globalAxisZero.x, _pos.y);
-            _targetValueY.text.text = Round(ConvertToOtherSystem((_pos.y / _globalAxisY) - _globalAxisZero.y, _minAxisY, _maxAxisY), 2);
+            _targetValueY.Text.text = Round(ConvertToOtherSystem((_pos.y / _globalAxisY) - _globalAxisZero.y, _minAxisY, _maxAxisY), 2);
         }
     }
 
@@ -152,17 +150,17 @@ public class GraphCreator : MonoBehaviour
         }
     }
 
-    private ValueConteiner CreateValueX(float value, float globalValue)
+    private ValueContainer CreateValueX(float value, float globalValue)
     {
-        ValueConteiner valueLabel = Instantiate(_valuePrefabX, new Vector2(globalValue, _globalAxisZero.y), Quaternion.identity, _tr);
-        valueLabel.text.text = Round(value, 2);
+        ValueContainer valueLabel = Instantiate(_valuePrefabX, new Vector2(globalValue, _globalAxisZero.y), Quaternion.identity, _tr);
+        valueLabel.Text.text = Round(value, 2);
         return valueLabel;
     }
 
-    private ValueConteiner CreateValueY(float value, float globalValue)
+    private ValueContainer CreateValueY(float value, float globalValue)
     {
-        ValueConteiner valueLabel = Instantiate(_valuePrefabY, new Vector2(_globalAxisZero.x, globalValue), Quaternion.identity, _tr);
-        valueLabel.text.text = Round(value, 2);
+        ValueContainer valueLabel = Instantiate(_valuePrefabY, new Vector2(_globalAxisZero.x, globalValue), Quaternion.identity, _tr);
+        valueLabel.Text.text = Round(value, 2);
         return valueLabel;
     }
 
@@ -234,6 +232,4 @@ public class GraphCreator : MonoBehaviour
         Create();
         CreateDiagram(line, points);
     }
-
-    #endregion Methods
 }
