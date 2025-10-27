@@ -51,10 +51,10 @@ public class PausedAnimation : MonoBehaviour
             transform.SetParent(_parent.parent);
         }
         if(_coroutine != null) StopCoroutine(_coroutine);
-        _coroutine = StartCoroutine(IHideAnimation());
+        _coroutine = StartCoroutine(HideAnimationCoroutine());
     }
 
-    private IEnumerator IHideAnimation()
+    private IEnumerator HideAnimationCoroutine()
     {
         _objAnimator.SetActive(false);
         yield return new WaitForFixedUpdate();

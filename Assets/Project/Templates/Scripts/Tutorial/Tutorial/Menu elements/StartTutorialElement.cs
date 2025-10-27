@@ -15,7 +15,7 @@ public class StartTutorialElement : TutorialElement<TutorialMenuUI>
         base.OnDestroy();
     }
 
-    protected override IEnumerator ITutorial()
+    protected override IEnumerator TutorialCoroutine()
     {
         yield return WaitMessage("WaitMessage with fun", EmotionType.FUN);
         yield return WaitMessage("WaitMessage");

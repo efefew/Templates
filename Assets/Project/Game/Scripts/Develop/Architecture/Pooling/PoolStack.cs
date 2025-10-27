@@ -31,12 +31,12 @@ public class PoolStack<T> where T : MonoBehaviour, IPooling<T>
         item.Tr.rotation = rotation;
         if (time != 0)
         {
-            EntryPoint.Mono.StartCoroutine(ITimerHide(item, time));
+            EntryPoint.Mono.StartCoroutine(TimerHideCoroutine(item, time));
         }
         return item;
     }
 
-    private IEnumerator ITimerHide(T item, float time)
+    private IEnumerator TimerHideCoroutine(T item, float time)
     {
         yield return WaitForPausedSeconds(time);
         Hide(item);

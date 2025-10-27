@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 public static class DataExtensions
 {
-    private static IEnumerator IDownloadData<T>(string url, Action<T> callbackOnSuccess,
+    private static IEnumerator DownloadDataCoroutine<T>(string url, Action<T> callbackOnSuccess,
         Action<string> callbackOnError = null, bool removeTrashSymbols = false, bool wrapper = false,
         [CanBeNull] string nameKey = null, [CanBeNull] string valueKey = null)
     {
@@ -36,7 +36,7 @@ public static class DataExtensions
             callbackOnError?.Invoke(request.error);
     }
 
-    private static IEnumerator IDownloadImage(string url, Image image, Action<string> callbackOnError = null)
+    private static IEnumerator DownloadImageCoroutine(string url, Image image, Action<string> callbackOnError = null)
     {
         url = url.Replace("http://", "https://");
         using UnityWebRequest request = UnityWebRequestTexture.GetTexture(new Uri(url));
@@ -50,7 +50,7 @@ public static class DataExtensions
             callbackOnError?.Invoke(request.error);
     }
 
-    private static IEnumerator IDownloadTexture(string url, Action<Texture2D> callbackOnSuccess,
+    private static IEnumerator DownloadTextureCoroutine(string url, Action<Texture2D> callbackOnSuccess,
         Action<string> callbackOnError = null)
     {
         url = url.Replace("http://", "https://");
@@ -68,17 +68,17 @@ public static class DataExtensions
         [CanBeNull] string nameKey = null, [CanBeNull] string valueKey = null)
     {
         EntryPoint.Mono.StartCoroutine(
-            IDownloadData(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper, nameKey, valueKey));
+            DownloadDataCoroutine(url, callbackOnSuccess, callbackOnError, removeTrashSymbols, wrapper, nameKey, valueKey));
     }
     public static void DownloadImage(string url, Image image, Action<string> callbackOnError = null)
     {
-        EntryPoint.Mono.StartCoroutine(IDownloadImage(url, image, callbackOnError));
+        EntryPoint.Mono.StartCoroutine(DownloadImageCoroutine(url, image, callbackOnError));
     }
 
     public static void DownloadTexture(string url, Action<Texture2D> callbackOnSuccess,
         Action<string> callbackOnError = null)
     {
-        EntryPoint.Mono.StartCoroutine(IDownloadTexture(url, callbackOnSuccess, callbackOnError));
+        EntryPoint.Mono.StartCoroutine(DownloadTextureCoroutine(url, callbackOnSuccess, callbackOnError));
     }
     
     public static Texture2D ToTexture2D(this byte[] bytes)

@@ -10,7 +10,6 @@ public class TextRepeater : MonoBehaviour
     private TMP_Text _labelTarget;
     private TMP_Text _label;
     private Coroutine _coroutine;
-    #region Unity Methods
     private void Awake()
     {
         _label = GetComponent<TMP_Text>();
@@ -19,11 +18,10 @@ public class TextRepeater : MonoBehaviour
             return;
         }
 
-        _coroutine = StartCoroutine(ICopyText());
+        _coroutine = StartCoroutine(CopyTextCoroutine());
     }
     private void OnDestroy() => StopCoroutine(_coroutine);
-    #endregion Unity Methods
-    private IEnumerator ICopyText()
+    private IEnumerator CopyTextCoroutine()
     {
         CopyText();
         while (true)

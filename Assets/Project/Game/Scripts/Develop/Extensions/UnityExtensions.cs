@@ -19,7 +19,7 @@ public static class CoroutineExtensions
 {
     private static int _countTemporaryVibration;
 
-    public static IEnumerator ILoadScene(SceneType scene, Action<float> callback = null)
+    public static IEnumerator LoadSceneCoroutine(SceneType scene, Action<float> callback = null)
     {
         yield return SaveManager.LoadAll();
         AsyncOperation operation = SceneManager.LoadSceneAsync(scene.ToString());
@@ -29,7 +29,7 @@ public static class CoroutineExtensions
             yield return null;
         }
     }
-    public static IEnumerator ITemporaryVibration(this XInputController xbox, float lowFrequency, float highFrequency,
+    public static IEnumerator TemporaryVibrationCoroutine(this XInputController xbox, float lowFrequency, float highFrequency,
         float duration)
     {
         _countTemporaryVibration++;
@@ -56,7 +56,7 @@ public static class UnityExtensions
     public static void TemporaryVibration(this MonoBehaviour monoBehaviour, XInputController xbox, float lowFrequency,
         float highFrequency, float duration)
     {
-        monoBehaviour.StartCoroutine(xbox.ITemporaryVibration(lowFrequency, highFrequency, duration));
+        monoBehaviour.StartCoroutine(xbox.TemporaryVibrationCoroutine(lowFrequency, highFrequency, duration));
     }
     public static T TryGetEnum<T>(this string value) where T : struct, Enum
     {
@@ -71,7 +71,7 @@ public static class UnityExtensions
     }
     public static void LoadScene(SceneType scene, Action<float> callback = null)
     {
-        EntryPoint.Mono.StartCoroutine(ILoadScene(scene, callback));
+        EntryPoint.Mono.StartCoroutine(LoadSceneCoroutine(scene, callback));
     }
 
     /// <summary>

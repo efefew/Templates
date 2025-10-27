@@ -40,7 +40,7 @@ public abstract class TutorialElement<TUI> where TUI : TutorialUI
         _tutorial.UI.BlockObj.SetActive(false);
         _tutorial.UI.MessageObj.SetActive(false);
         _tutorial.UI.TutorialObj.SetActive(true);
-        EntryPoint.Mono.StartCoroutine(ITutorial());
+        EntryPoint.Mono.StartCoroutine(TutorialCoroutine());
     }
     protected void EndTutorial()
     {
@@ -67,7 +67,7 @@ public abstract class TutorialElement<TUI> where TUI : TutorialUI
     {
         _tutorial.UI.MessageLabel.text = message;
     }
-    protected abstract IEnumerator ITutorial();    
+    protected abstract IEnumerator TutorialCoroutine();    
     protected WaitUntil WaitClickOnMarker(Action action, string message = null, EmotionType person = EmotionType.NONE)
     {
         _tutorial.UI.MessageObj.SetActive(true);

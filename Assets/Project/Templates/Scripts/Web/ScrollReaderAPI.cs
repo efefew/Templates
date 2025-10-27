@@ -75,9 +75,9 @@ public abstract class ScrollReaderAPI<TData, TBlock> : ReaderAPI where TBlock : 
         _id = 0;
         ClearData();
         if(_coroutine != null) StopCoroutine(_coroutine);
-        _coroutine = StartCoroutine(IUpdateData());
+        _coroutine = StartCoroutine(UpdateDataCoroutine());
     }
-    private IEnumerator IUpdateData()
+    private IEnumerator UpdateDataCoroutine()
     {
         yield return new WaitForFixedUpdate();
         _scroll.verticalNormalizedPosition = 0;
