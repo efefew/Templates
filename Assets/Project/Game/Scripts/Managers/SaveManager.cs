@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 public static class SaveManager
 {
@@ -70,8 +69,32 @@ public class PlayerControllerData
 [Serializable]
 public class SettingData
 {
-    public float Music = 1;
-    public float Sound = 1;
+    public float Music;
+    public float Sound;
+    /*private float _music = 1;
+    private float _sound = 1;
+
+    [JsonProperty]
+    public float Music
+    {
+        get => _music;
+        set
+        {
+            _music = value;
+            SaveManager.Save(this);
+        }
+    }
+
+    [JsonProperty]
+    public float Sound
+    {
+        get => _sound;
+        set
+        {
+            _sound = value;
+            SaveManager.Save(this);
+        }
+    }*/
 }
 
 [Serializable]
