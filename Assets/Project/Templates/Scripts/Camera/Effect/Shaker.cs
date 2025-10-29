@@ -24,9 +24,9 @@ namespace Project.Templates.Scripts.Camera.Effect
             }
         }
 
-        public void Shake(float duration, float magnitude, float noise, bool _shake3D)
+        public void Shake(float duration, float magnitude, float noise, bool shake3D)
         {
-            _ = _shake3D
+            _ = shake3D
                 ? StartCoroutine(Shake3DCoroutine(duration, magnitude, noise))
                 : StartCoroutine(Shake2DCoroutine(duration, magnitude, noise));
         }

@@ -45,12 +45,12 @@ public static class UnityExtensions
 {
     public enum SceneType
     {
-        INTRO,
-        GAME,
-        MENU,
-        LOAD,
-        LOBBY,
-        TEST
+        Intro,
+        Game,
+        Menu,
+        Load,
+        Lobby,
+        Test
     }
 
     public static void TemporaryVibration(this MonoBehaviour monoBehaviour, XInputController xbox, float lowFrequency,

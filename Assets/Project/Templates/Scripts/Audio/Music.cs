@@ -9,12 +9,12 @@ public class Music : MonoBehaviour
 {
     #region Fields
 
-    private const float minCutoffFrequency = 500, maxCutoffFrequency = 22000;
+    private const float MIN_CUTOFF_FREQUENCY = 500, MAX_CUTOFF_FREQUENCY = 22000;
 
-    private AudioSource audioSource;
-    private AudioMixer audioMixer;
-    private int musicTrackID;
-    public AudioClip[] music;
+    private AudioSource _audioSource;
+    private AudioMixer _audioMixer;
+    private int _musicTrackID;
+    [SerializeField] private AudioClip[] _music;
 
     #endregion Fields
 
@@ -22,73 +22,69 @@ public class Music : MonoBehaviour
 
     private void Awake()
     {
-        audioMixer = (AudioMixer)Resources.Load("Audio/AudioMixer");
-        audioSource = GetComponent<AudioSource>();
+        _audioMixer = (AudioMixer)Resources.Load("Audio/AudioMixer");
+        _audioSource = GetComponent<AudioSource>();
     }
 
-    private void Start() => audioMixer.SetFloat("musicCutoffFrequency", minCutoffFrequency);
+    private void Start() => _audioMixer.SetFloat("musicCutoffFrequency", MIN_CUTOFF_FREQUENCY);
 
     private void OnEnable()
     {
         ShuffleTheMusicTrack();
-        _ = StartCoroutine(playMusic());
+        _ = StartCoroutine(PlayMusic());
     }
 
-    private IEnumerator playMusic()
+    private IEnumerator PlayMusic()
     {
         while (true)
         {
             NextMusic();
-            yield return new WaitForSeconds(music[musicTrackID - 1].length);
+            yield return new WaitForSeconds(_music[_musicTrackID - 1].length);
         }
     }
 
     /// <summary>
-    /// перемешать музыковую дорожку
+    /// Перемешать музыку
     /// </summary>
     [ContextMenu("ShuffleTheMusicTrack")]
     private void ShuffleTheMusicTrack()
     {
-        musicTrackID = 0;
-        int id;
-        AudioClip temp;
-        for (int i = 1; i < music.Length; i++)
+        _musicTrackID = 0;
+        for (int i = 1; i < _music.Length; i++)
         {
             int k = i - 1;
-            id = Random.Range(k, music.Length - k);
-            temp = music[k];
-            music[k] = music[id];
-            music[id] = temp;
+            int id = Random.Range(k, _music.Length - k);
+            (_music[k], _music[id]) = (_music[id], _music[k]);
         }
     }
 
     /// <summary>
     /// Плавная активация заглушки музыки (частота среза)
     /// </summary>
-    /// <param name="duration">длительность активации</param>
+    /// <param name="duration">Длительность активации</param>
     /// <param name="on">заглушить?</param>
     /// <returns></returns>
     private IEnumerator ActivateCutoffFrequencyCoroutine(float duration, bool on)
     {
         //Инициализируем счётчиков прошедшего времени
         float elapsed = 0f;
-        _ = audioMixer.GetFloat("musicCutoffFrequency", out float startCutoffFrequency);
-        float targetCutoffFrequency = on ? minCutoffFrequency : maxCutoffFrequency;
+        _ = _audioMixer.GetFloat("musicCutoffFrequency", out float startCutoffFrequency);
+        float targetCutoffFrequency = on ? MIN_CUTOFF_FREQUENCY : MAX_CUTOFF_FREQUENCY;
 
-        //Выполняем код до тех пор пока не иссякнет время
+        //Выполняем код до тех пор, пока не иссякнет время
         while (elapsed < duration)
         {
-            _ = audioMixer.SetFloat("musicCutoffFrequency", Mathf.Lerp(startCutoffFrequency, targetCutoffFrequency, elapsed / duration));
+            _ = _audioMixer.SetFloat("musicCutoffFrequency", Mathf.Lerp(startCutoffFrequency, targetCutoffFrequency, elapsed / duration));
             elapsed += Time.deltaTime;
             yield return null;
         }
-        _ = audioMixer.SetFloat("musicCutoffFrequency", targetCutoffFrequency);
+        _ = _audioMixer.SetFloat("musicCutoffFrequency", targetCutoffFrequency);
     }
 
     /// <summary>
     /// Плавное изменение громкости музыки
     /// </summary>
-    /// <param name="duration">длительность изменения</param>
+    /// <param name="duration">Длительность изменения</param>
     /// <param name="on">убавить?</param>
     /// <returns></returns>
     private IEnumerator ChangeVolumeCoroutine(float duration, bool on)
@@ -96,27 +92,27 @@ public class Music : MonoBehaviour
         //Инициализируем счётчиков прошедшего времени
         float elapsed = 0f;
 
-        float startVolume = audioSource.volume;
+        float startVolume = _audioSource.volume;
         float targetVolume = on ? 0.5f : 1;
-        //Выполняем код до тех пор пока не иссякнет время
+        //Выполняем код до тех пор, пока не иссякнет время
         while (elapsed < duration)
         {
-            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, elapsed / duration);
+            _audioSource.volume = Mathf.Lerp(startVolume, targetVolume, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
-        audioSource.volume = targetVolume;
+        _audioSource.volume = targetVolume;
     }
 
     [ContextMenu("NextMusic")]
     public void NextMusic()
     {
-        if (musicTrackID >= music.Length)
+        if (_musicTrackID >= _music.Length)
             ShuffleTheMusicTrack();
-        if (audioSource.isPlaying)
-            audioSource.Stop();
-        audioSource.PlayOneShot(music[musicTrackID]);
-        musicTrackID++;
+        if (_audioSource.isPlaying)
+            _audioSource.Stop();
+        _audioSource.PlayOneShot(_music[_musicTrackID]);
+        _musicTrackID++;
     }
 
     /// <summary>

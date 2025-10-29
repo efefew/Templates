@@ -4,10 +4,10 @@ public class Finger : MonoBehaviour
 {
     public enum DirectionFingerType
     {
-        RIGHT = 0,
-        LEFT = 180,
-        UP = 90,
-        DOWN = 270
+        Right = 0,
+        Left = 180,
+        Up = 90,
+        Down = 270
     }
 
     [SerializeField] private Transform _finger;

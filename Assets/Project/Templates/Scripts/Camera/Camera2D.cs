@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Project.Templates.Scripts.Camera
 {
@@ -8,9 +9,26 @@ namespace Project.Templates.Scripts.Camera
 
         private Transform _tr;
         private UnityEngine.Camera _camera;
+        [FormerlySerializedAs("moveButton")]
         [Range(0f, 100f)]
         [SerializeField]
-        private float moveButton, moveMouse, zoomButton, zoomScroll;
+        private float _moveButton;
+
+        [FormerlySerializedAs("moveMouse")]
+        [Range(0f, 100f)]
+        [SerializeField]
+        private float _moveMouse;
+
+        [FormerlySerializedAs("zoomButton")]
+        [Range(0f, 100f)]
+        [SerializeField]
+        private float _zoomButton;
+
+        [FormerlySerializedAs("zoomScroll")]
+        [Range(0f, 100f)]
+        [SerializeField]
+        private float _zoomScroll;
+
         [SerializeField]
         private float _moveButtonScale = 1000,
             _moveMouseScale = 500,
@@ -34,35 +52,35 @@ namespace Project.Templates.Scripts.Camera
 
             if (Input.GetAxis("Mouse ScrollWheel") >= 0.1 && _camera.orthographicSize > _minOrthographicSize)
             {
-                _camera.orthographicSize -= zoomScroll * _camera.orthographicSize / _zoomScrollScale;
+                _camera.orthographicSize -= _zoomScroll * _camera.orthographicSize / _zoomScrollScale;
             }
 
             if (Input.GetAxis("Mouse ScrollWheel") <= -0.1)
             {
-                _camera.orthographicSize += zoomScroll * _camera.orthographicSize / _zoomScrollScale;
+                _camera.orthographicSize += _zoomScroll * _camera.orthographicSize / _zoomScrollScale;
             }
 
             if (Input.GetKey(KeyCode.Mouse1))
             {
-                _tr.position -= _tr.up * Input.GetAxis("Mouse Y") * moveMouse * _camera.orthographicSize / _moveMouseScale;
-                _tr.position -= _tr.right * Input.GetAxis("Mouse X") * moveMouse * _camera.orthographicSize / _moveMouseScale;
+                _tr.position -= _tr.up * Input.GetAxis("Mouse Y") * _moveMouse * _camera.orthographicSize / _moveMouseScale;
+                _tr.position -= _tr.right * Input.GetAxis("Mouse X") * _moveMouse * _camera.orthographicSize / _moveMouseScale;
             }
         }
         private void FixedUpdate()
         {
             if (Input.GetKey(KeyCode.Equals) && _camera.orthographicSize > _minOrthographicSize)
             {
-                _camera.orthographicSize -= zoomButton * _camera.orthographicSize / _zoomButtonScale;
+                _camera.orthographicSize -= _zoomButton * _camera.orthographicSize / _zoomButtonScale;
             }
 
             if (Input.GetKey(KeyCode.Minus))
             {
-                _camera.orthographicSize += zoomButton * _camera.orthographicSize / _zoomButtonScale;
+                _camera.orthographicSize += _zoomButton * _camera.orthographicSize / _zoomButtonScale;
             }
 
             if (Input.anyKey)
             {
-                float force = moveButton * _camera.orthographicSize / _moveButtonScale;
+                float force = _moveButton * _camera.orthographicSize / _moveButtonScale;
                 if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 {
                     _tr.position -= transform.right * force;

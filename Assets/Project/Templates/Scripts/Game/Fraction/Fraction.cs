@@ -15,11 +15,11 @@ public class Relationship
 {
     public enum RelationshipType
     {
-        ALLY,
-        ENEMY,
-        NEUTRAL
+        Ally,
+        Enemy,
+        Neutral
     }
 
-    public RelationshipType Type = RelationshipType.NEUTRAL;
+    public RelationshipType Type = RelationshipType.Neutral;
     [Range(0, 100f)] public float Power = 100f;
 }

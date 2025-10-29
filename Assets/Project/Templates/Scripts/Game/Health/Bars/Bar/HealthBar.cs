@@ -5,7 +5,7 @@ using static Health;
 public class HealthBar : StateBar
 {
     private Health _health;
-    private DamageType _damageType = DamageType.ABSOLUTE;
+    private DamageType _damageType = DamageType.Absolute;
     [field:NonSerialized] public new HealthBarConfiguration Configuration { get; protected set; }
     public HealthBar(Health health, HealthBarConfiguration configuration) : base(configuration)
     {
@@ -29,7 +29,7 @@ public class HealthBar : StateBar
             }
         }
 
-        deltaValue = _damageType == DamageType.HEALING ? -deltaValue : deltaValue;
+        deltaValue = _damageType == DamageType.Healing ? -deltaValue : deltaValue;
         base.TryChangeValue(deltaValue);
     }
 }

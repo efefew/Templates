@@ -8,26 +8,26 @@ public abstract class TutorialElement<TUI> where TUI : TutorialUI
 {
     protected enum ShowButtonType
     {
-        NONE,
+        None,
         /// <summary>
         /// Дублирование через Instantiate. Кнопка иногда может оказаться в неправильном месте
         /// </summary>
-        CLONE,
+        Clone,
         /// <summary>
         /// Перемещение заменой родителя. Наименее ресурсозатратная операция, но кнопка может оказаться в неправильном месте
         /// </summary>
-        MOVE,
+        Move,
         /// <summary>
         /// Перемещение заменой родителя с учётом всяких LayoutGroup. Самая ресурсозатратная операция, но зато кнопка всегда в правильном месте
         /// </summary>
-        FORCE_MOVE 
+        ForceMove 
     }
     public enum EmotionType
     {
-        DEFAULT,
-        FUN,
-        SAD,
-        NONE
+        Default,
+        Fun,
+        Sad,
+        None
     }
 
     protected Tutorial<TUI> _tutorial;
@@ -63,25 +63,25 @@ public abstract class TutorialElement<TUI> where TUI : TutorialUI
         }
     }
 
-    private void Send(string message, EmotionType emotion = EmotionType.DEFAULT)
+    private void Send(string message, EmotionType emotion = EmotionType.Default)
     {
         _tutorial.UI.MessageLabel.text = message;
     }
     protected abstract IEnumerator TutorialCoroutine();    
-    protected WaitUntil WaitClickOnMarker(Action action, string message = null, EmotionType person = EmotionType.NONE)
+    protected WaitUntil WaitClickOnMarker(Action action, string message = null, EmotionType person = EmotionType.None)
     {
         _tutorial.UI.MessageObj.SetActive(true);
         Send(message, person);
         _tutorial.StepCompleted = false;
         return new WaitUntil(MarkerClickComplete(action));
     }
-    protected WaitUntil WaitMessage(string message, EmotionType emotion = EmotionType.DEFAULT)
+    protected WaitUntil WaitMessage(string message, EmotionType emotion = EmotionType.Default)
     {
         return WaitClick(_tutorial.UI.MessageButton, message, emotion);
     }
-    protected WaitUntil WaitClick(Button button, string message = null, EmotionType person = EmotionType.NONE, bool block = true, ShowButtonType showButtonType = ShowButtonType.MOVE)
+    protected WaitUntil WaitClick(Button button, string message = null, EmotionType person = EmotionType.None, bool block = true, ShowButtonType showButtonType = ShowButtonType.Move)
     {
-        Button buttonClone = showButtonType is ShowButtonType.CLONE ? Object.Instantiate(button, _tutorial.UI.WaitButtonsContainer) : button;
+        Button buttonClone = showButtonType is ShowButtonType.Clone ? Object.Instantiate(button, _tutorial.UI.WaitButtonsContainer) : button;
         if (message != null)
         {
             if (!block)
@@ -106,23 +106,23 @@ public abstract class TutorialElement<TUI> where TUI : TutorialUI
     {
         switch (showButtonType)
         {
-            case ShowButtonType.CLONE:
+            case ShowButtonType.Clone:
                 return new WaitUntil(ClickComplete(buttonClone));
-            case ShowButtonType.MOVE:
+            case ShowButtonType.Move:
             {
                 int oldID = button.transform.GetSiblingIndex();
                 Transform oldParent = button.transform.parent;
                 button.transform.SetParent(_tutorial.UI.WaitButtonsContainer, worldPositionStays: true);
                 return new WaitUntil(ClickComplete(buttonClone, oldParent, oldID));
             }
-            case ShowButtonType.FORCE_MOVE:
+            case ShowButtonType.ForceMove:
             {
                 int oldID = button.transform.GetSiblingIndex();
                 Transform oldParent = button.transform.parent;
                 button.GetComponent<RectTransform>().ForceChangeParentUI(_tutorial.UI.WaitButtonsContainer);
                 return new WaitUntil(ClickComplete(buttonClone, oldParent, oldID));
             }
-            case ShowButtonType.NONE:
+            case ShowButtonType.None:
                 return new WaitUntil(ClickComplete(button));
             default:
                 throw new ArgumentOutOfRangeException(nameof(showButtonType), showButtonType, null);

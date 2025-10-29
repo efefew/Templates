@@ -17,13 +17,13 @@ public static class Language
 
     public enum LanguageType
     {
-        ENGLISH,
-        RUSSIAN,
-        SPANISH,
-        FRENCH,
-        GERMAN,
-        JAPAN,
-        CHINESE
+        English,
+        Russian,
+        Spanish,
+        French,
+        German,
+        Japan,
+        Chinese
     }
     public static LanguageType Type
     {

@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine.UI;
 
 public class StartTutorialElement : TutorialElement<TutorialMenuUI>
 {
@@ -17,7 +16,7 @@ public class StartTutorialElement : TutorialElement<TutorialMenuUI>
 
     protected override IEnumerator TutorialCoroutine()
     {
-        yield return WaitMessage("WaitMessage with fun", EmotionType.FUN);
+        yield return WaitMessage("WaitMessage with fun", EmotionType.Fun);
         yield return WaitMessage("WaitMessage");
         yield return WaitClick(_tutorial.UI.MessageButton, "button", block: false);
         SaveManager.TutorialData.StartTutorialCompleted = true;

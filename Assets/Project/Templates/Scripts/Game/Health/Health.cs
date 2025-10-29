@@ -17,49 +17,49 @@ public class Health : MonoBehaviour, IStateBarCollection<HealthBar>
     public enum DamageType
     {
         [Tooltip("Тип повреждения от пореза")] 
-        СUTTING,
+        Сutting,
 
         [Tooltip("Тип повреждения от прокалывания")]
-        PRICKING,
+        Pricking,
 
         [Tooltip("Тип повреждения от удара")] 
-        PUNCH,
+        Punch,
 
         [Tooltip("Тип повреждения от взрыва")] 
-        EXPLOSION,
+        Explosion,
 
         [Tooltip("Тип повреждения от выстрела")]
-        SHOOTING,
+        Shooting,
 
         [Tooltip("Тип повреждения от перегрева")]
-        OVERHEAT,
+        Overheat,
 
         [Tooltip("Тип повреждения от обморожения")]
-        FROSTBITE,
+        Frostbite,
 
         [Tooltip("Тип повреждения от электрического разряда")]
-        ELECTRIC_SHOCK,
+        ElectricShock,
 
         [Tooltip("Тип повреждения от растворения в кислоте")]
-        DISSOLUTION_IN_ACID,
+        DissolutionInAcid,
 
         [Tooltip("Тип повреждения от яда")] 
-        POISON,
+        Poison,
 
         [Tooltip("Тип лечения")]
-        HEALING,
+        Healing,
 
         [Tooltip("Тип повреждения от чистой магии")]
-        MAGIC,
+        Magic,
         
         [Tooltip("Тип повреждения от света")]
-        LIGHT,        
+        Light,        
         
         [Tooltip("Тип повреждения от тьмы")]
-        DARK,
+        Dark,
         
         [Tooltip("Тип абсолютного повреждения (например, отдельный тип для оружия, которое наносит неизбежный урон)")]
-        ABSOLUTE
+        Absolute
     }
     private const float FULL_RESIST = 100f;
     

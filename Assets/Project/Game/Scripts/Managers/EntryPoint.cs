@@ -8,7 +8,7 @@ using static UnityExtensions;
 
 public abstract class EntryPoint
 {
-    private const SceneType TARGET_SCENE = SceneType.GAME;
+    private const SceneType TARGET_SCENE = SceneType.Game;
     private static EntryPoint _instance;
     public static MonoEntryPoint Mono { get; private set; }
 

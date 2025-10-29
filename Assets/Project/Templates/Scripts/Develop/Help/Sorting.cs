@@ -1,21 +1,21 @@
 // https://kvodo.ru/sortirovka-shella.html
 /// <summary>
-/// сортировки
+/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 /// </summary>
 internal abstract class Sorting<T>
 {
     /// <summary>
-    /// Сортировка
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="array">массив, который необходимо отсортировать</param>
-    /// <returns>отсортированный массив</returns>
+    /// <param name="array">пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+    /// <returns>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</returns>
     public abstract T[] SortingMethod(T[] array);
     /// <summary>
-    /// функция обмена
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="array">массив, в котором необходимо поменять местами элементы</param>
-    /// <param name="id">индекс следующего элемента, который поменяется местами с предыдущим</param>
-    protected void Swap(ref float[] array, int id)// функция обмена
+    /// <param name="array">пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+    /// <param name="id">пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+    protected void Swap(ref float[] array, int id)// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     {
         float temp;
         temp = array[id];
@@ -23,22 +23,22 @@ internal abstract class Sorting<T>
         array[id - 1] = temp;
     }
     /// <summary>
-    /// Сортировка методом вставки
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class SortingByInsertionMethod/*Сортировка методом вставки*/ : Sorting<float>
+    public class SortingByInsertionMethod/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {
             int size = array.Length;
-            //int CountComparison = 0/*Количество сравнений*/, CountTransfer = 0/*Количество пересылок*/;
+            //int CountComparison = 0/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/, CountTransfer = 0/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/;
             float temp;
             int j;
-            for (int i = 1; i < size; i++) //проходит по всем элементам
+            for (int i = 1; i < size; i++) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             {
                 temp = array[i];
                 j = i - 1;
                 //CountComparison++;
-                while (j >= 0 && array[j] > temp)//пересылает
+                while (j >= 0 && array[j] > temp)//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 {
                     array[j + 1] = array[j];
                     array[j] = temp;
@@ -51,15 +51,15 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Сортировка методом Шелла
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class SortingByTheShellMethod/*Сортировка методом Шелла*/ : Sorting<float>
+    public class SortingByTheShellMethod/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {
             int size = array.Length;
-            int h = size / 2;//длина шагов
-                             //int CountComparison = 0/*Количество сравнений*/, CountTransfer = 0/*Количество пересылок*/;
+            int h = size / 2;//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                             //int CountComparison = 0/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/, CountTransfer = 0/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/;
             int j;
             float temp;
             while (h > 0)
@@ -85,21 +85,21 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Сортировка по подсчёту
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class SortingByCounting/*Сортировка по подсчёту*/ : Sorting<int>
+    public class SortingByCounting/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<int>
     {
-        private int maxNumber;//максимальное значение в массиве (если -1, то нужно найти)
-        private bool find;
+        private int _maxNumber;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ -1, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)
+        private bool _find;
         public SortingByCounting(int maxNumber = -1)
         {
-            find = maxNumber < 0;
-            this.maxNumber = maxNumber;
+            _find = maxNumber < 0;
+            this._maxNumber = maxNumber;
         }
         public override int[] SortingMethod(int[] array)
         {
             int size = array.Length;
-            if (find)
+            if (_find)
             {
                 int max = array[0];
                 for (int i = 0; i < size; i++)
@@ -110,17 +110,17 @@ internal abstract class Sorting<T>
                     }
                 }
 
-                maxNumber = max;
+                _maxNumber = max;
             }
 
-            int[] numbers = new int[maxNumber + 1];
+            int[] numbers = new int[_maxNumber + 1];
             for (int i = 0; i < size; i++)
             {
                 numbers[array[i]] = numbers[array[i]] + 1;
             }
 
             int j = 0;
-            for (int i = 0; i < (maxNumber + 1); i++)
+            for (int i = 0; i < (_maxNumber + 1); i++)
             {
                 while (numbers[i] > 0)
                 {
@@ -134,9 +134,9 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Сортировка по сравнению и подсчёту
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class SortingByComparisonAndCounting/*Сортировка по сравнению и подсчёту*/ : Sorting<float>
+    public class SortingByComparisonAndCounting/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {
@@ -167,9 +167,9 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Сортировка выбором
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class SortingByChoice/*Сортировка выбором*/ : Sorting<float>
+    public class SortingByChoice/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {
@@ -199,9 +199,9 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Гномья сортировка
+    /// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class DwarfSorting/*Гномья сортировка*/ : Sorting<float>
+    public class DwarfSorting/*пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
 
         public override float[] SortingMethod(float[] array)
@@ -227,9 +227,9 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Шейкера сортировка (перемешиванием)
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     /// </summary>
-    public class ShakerSorting/*Шейкера сортировка (перемешиванием)*/ : Sorting<float>
+    public class ShakerSorting/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {
@@ -261,9 +261,9 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Быстрая сортировка
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class QuickSorting/*Быстрая сортировка*/ : Sorting<float>
+    public class QuickSorting/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {
@@ -272,11 +272,11 @@ internal abstract class Sorting<T>
             return array;
         }
 
-        private void QuickSort(float[] array, int first, int last)//рекурсивная функция сортировки
+        private void QuickSort(float[] array, int first, int last)//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         {
             float mid, count;
             int newFirst = first, newLast = last;
-            mid = array[(newFirst + newLast) / 2]; //вычисление опорного элемента
+            mid = array[(newFirst + newLast) / 2]; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             do
             {
                 while (array[newFirst] < mid)
@@ -289,7 +289,7 @@ internal abstract class Sorting<T>
                     newLast--;
                 }
 
-                if (newFirst <= newLast) //перестановка элементов
+                if (newFirst <= newLast) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 {
                     count = array[newFirst];
                     array[newFirst] = array[newLast];
@@ -310,24 +310,24 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Сортировка слиянием
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class MergeSorting/*Сортировка слиянием*/ : Sorting<float>
+    public class MergeSorting/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
-        private int size;
+        private int _size;
         public override float[] SortingMethod(float[] array)
         {
-            size = array.Length;
-            return MergeSort(array, 0, size - 1);
+            _size = array.Length;
+            return MergeSort(array, 0, _size - 1);
         }
 
-        private float[] MergeSort(float[] array, int first, int last)//рекурсивная процедура сортировки
+        private float[] MergeSort(float[] array, int first, int last)//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         {
             if (first < last)
             {
-                array = MergeSort(array, first, (first + last) / 2); //сортировка левой части
-                array = MergeSort(array, ((first + last) / 2) + 1, last); //сортировка правой части
-                array = Merge(array, first, last); //слияние двух частей
+                array = MergeSort(array, first, (first + last) / 2); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                array = MergeSort(array, ((first + last) / 2) + 1, last); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                array = Merge(array, first, last); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             }
 
             return array;
@@ -336,11 +336,11 @@ internal abstract class Sorting<T>
         private float[] Merge(float[] array, int first, int last)
         {
             int middle, start, final, j;
-            float[] tempArray = new float[size];
-            middle = (first + last) / 2; //вычисление среднего элемента
-            start = first; //начало левой части
-            final = middle + 1; //начало правой части
-            for (j = first; j <= last; j++) //выполнять от начала до конца
+            float[] tempArray = new float[_size];
+            middle = (first + last) / 2; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            start = first; //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+            final = middle + 1; //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+            for (j = first; j <= last; j++) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             {
                 if ((start <= middle) && ((final > last) || (array[start] < array[final])))
                 {
@@ -353,7 +353,7 @@ internal abstract class Sorting<T>
                     final++;
                 }
             }
-            //возвращение результата в список
+            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             for (j = first; j <= last; j++)
             {
                 array[j] = tempArray[j];
@@ -363,9 +363,9 @@ internal abstract class Sorting<T>
         }
     }
     /// <summary>
-    /// Сортировка пузырьком
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    public class BubbleSorting/*Сортировка пузырьком*/ : Sorting<float>
+    public class BubbleSorting/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/ : Sorting<float>
     {
         public override float[] SortingMethod(float[] array)
         {

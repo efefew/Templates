@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Joystick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
@@ -7,16 +8,22 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
 
     #region Properties
 
-    public Vector2 inputVector { get; private set; }
+    public Vector2 InputVector { get; private set; }
 
     #endregion Properties
 
     #region Fields
 
-    [SerializeField]
-    private Image joystick, joystickBackground, joystickArea;
+    [FormerlySerializedAs("joystick")] [SerializeField]
+    private Image _joystick;
 
-    private Vector2 joystickBackgroundStartPosition;
+    [FormerlySerializedAs("joystickBackground")] [SerializeField]
+    private Image _joystickBackground;
+
+    [FormerlySerializedAs("joystickArea")] [SerializeField]
+    private Image _joystickArea;
+
+    private Vector2 _joystickBackgroundStartPosition;
     //[SerializeField] private Color inActiveJoystickColor;
     //[SerializeField] private Color activeJoystickColor;
 
@@ -28,7 +35,7 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
 
     private void Start() =>
         //ClickEffect();
-        joystickBackgroundStartPosition = joystickBackground.rectTransform.anchoredPosition;
+        _joystickBackgroundStartPosition = _joystickBackground.rectTransform.anchoredPosition;
 
     //private void ClickEffect()
     //{
@@ -46,32 +53,32 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickBackground.rectTransform, eventData.position, null, out Vector2 joystickPosition))
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_joystickBackground.rectTransform, eventData.position, null, out Vector2 joystickPosition))
         {
-            joystickPosition.x *= 2 / joystickBackground.rectTransform.sizeDelta.x;
-            joystickPosition.y *= 2 / joystickBackground.rectTransform.sizeDelta.y;
+            joystickPosition.x *= 2 / _joystickBackground.rectTransform.sizeDelta.x;
+            joystickPosition.y *= 2 / _joystickBackground.rectTransform.sizeDelta.y;
 
-            inputVector = joystickPosition.magnitude > 1f ? joystickPosition.normalized : joystickPosition;
+            InputVector = joystickPosition.magnitude > 1f ? joystickPosition.normalized : joystickPosition;
 
-            joystick.rectTransform.anchoredPosition = new Vector2(inputVector.x * joystickBackground.rectTransform.sizeDelta.x / 2, inputVector.y * joystickBackground.rectTransform.sizeDelta.y / 2);
+            _joystick.rectTransform.anchoredPosition = new Vector2(InputVector.x * _joystickBackground.rectTransform.sizeDelta.x / 2, InputVector.y * _joystickBackground.rectTransform.sizeDelta.y / 2);
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         //ClickEffect();
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickArea.rectTransform, eventData.position, null, out Vector2 joystickBackgroundPosition))
-            joystickBackground.rectTransform.anchoredPosition = joystickBackgroundPosition;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_joystickArea.rectTransform, eventData.position, null, out Vector2 joystickBackgroundPosition))
+            _joystickBackground.rectTransform.anchoredPosition = joystickBackgroundPosition;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        joystickBackground.rectTransform.anchoredPosition = joystickBackgroundStartPosition;
+        _joystickBackground.rectTransform.anchoredPosition = _joystickBackgroundStartPosition;
 
         //ClickEffect();
 
-        inputVector = Vector2.zero;
-        joystick.rectTransform.anchoredPosition = Vector2.zero;
+        InputVector = Vector2.zero;
+        _joystick.rectTransform.anchoredPosition = Vector2.zero;
     }
 
     #endregion Methods

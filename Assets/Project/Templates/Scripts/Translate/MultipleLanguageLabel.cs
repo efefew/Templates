@@ -22,7 +22,7 @@ public class MultipleLanguageLabel : MonoBehaviour, IMultipleLanguage
     {
         if (!TranslatedText.ContainsKey(language))
         {
-            _label.text = TranslatedText[Language.LanguageType.ENGLISH];
+            _label.text = TranslatedText[Language.LanguageType.English];
             return;
         }
         _label.text = TranslatedText[language];

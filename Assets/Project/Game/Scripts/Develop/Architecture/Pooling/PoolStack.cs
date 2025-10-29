@@ -5,27 +5,27 @@ using static PauseManager;
 using UnityEngine;
 public class PoolStack<T> where T : MonoBehaviour, IPooling<T>
 {
-    private readonly T _prefab;
-    private readonly Stack<T> _stack = new ();
-    private readonly Transform _parent;
+    private readonly T PREFAB;
+    private readonly Stack<T> STACK = new ();
+    private readonly Transform PARENT;
     public event Action OnClear;
     public PoolStack(T prefab, Transform parent = null)
     {
-        _prefab = prefab;
-        _parent = parent;
+        PREFAB = prefab;
+        PARENT = parent;
     }
 
     private T Create(Vector3 position, Quaternion rotation)
     {
-        T instance = UnityEngine.Object.Instantiate(_prefab, position, rotation, _parent);
+        T instance = UnityEngine.Object.Instantiate(PREFAB, position, rotation, PARENT);
         instance.SetPooling(this);
-        _stack.Push(instance);
+        STACK.Push(instance);
         return instance;
     }
     
     public T Show(Vector3 position, Quaternion rotation, float time = 0)
     {
-        T item = _stack.Count > 0 ? _stack.Pop() : Create(position, rotation);
+        T item = STACK.Count > 0 ? STACK.Pop() : Create(position, rotation);
         item.Obj.SetActive(true);
         item.Tr.position = position;
         item.Tr.rotation = rotation;
@@ -44,7 +44,7 @@ public class PoolStack<T> where T : MonoBehaviour, IPooling<T>
     public void Hide(T item)
     {
         item.Obj.SetActive(false);
-        _stack.Push(item);
+        STACK.Push(item);
     }
 
     public void Clear()
