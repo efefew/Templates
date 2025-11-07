@@ -1,11 +1,10 @@
 #if UNITY_EDITOR
 using UnityEditor;
 
-public class Parser
-{
+public class Parser {
+
     //[MenuItem("Assets/Parser", false, 0)]
-    public static void Run()
-    {
+    public static void Run() {
         AssetDatabase.StartAssetEditing();
 
         //string assetPath = "Assets{PATH_THEMES}{nameTheme}_{classTheme}.asset";
@@ -32,5 +31,6 @@ public class Parser
         AssetDatabase.Refresh();
         AssetDatabase.SaveAssets();
     }
+
 }
 #endif
