@@ -1,38 +1,70 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using static PauseManager;
 using UnityEngine;
+using static PauseManager;
+using Object = UnityEngine.Object;
+
+// ReSharper disable once ClassNeverInstantiated.Global
 public class PoolStack<T> where T : MonoBehaviour, IPooling<T>
 {
-    private readonly T PREFAB;
-    private readonly Stack<T> STACK = new ();
     private readonly Transform PARENT;
-    public event Action OnClear;
-    public PoolStack(T prefab, Transform parent = null)
+    private readonly T PREFAB;
+    private readonly Stack<T> STACK = new();
+    private Action<T> _build;
+
+    public PoolStack(T prefab, Transform parent = null, int initialCapacity = 0, Action<T> build = null)
     {
         PREFAB = prefab;
         PARENT = parent;
+        Build(initialCapacity, build);
     }
 
-    private T Create(Vector3 position, Quaternion rotation)
+    public event Action OnClear, OnDestroy;
+
+    private void Build(int count, Action<T> build)
     {
-        T instance = UnityEngine.Object.Instantiate(PREFAB, position, rotation, PARENT);
+        _build = build;
+        if (count <= 0) return;
+        for (int i = 0; i < count; i++)
+        {
+            T instance = Object.Instantiate(PREFAB, PARENT);
+            build?.Invoke(instance);
+            instance.SetPooling(this);
+            Hide(instance);
+        }
+    }
+
+    private T Create()
+    {
+        T instance = Object.Instantiate(PREFAB, PARENT);
+        _build?.Invoke(instance);
         instance.SetPooling(this);
-        STACK.Push(instance);
         return instance;
     }
-    
-    public T Show(Vector3 position, Quaternion rotation, float time = 0)
+
+    public T Show(bool local = false, float time = 0)
     {
-        T item = STACK.Count > 0 ? STACK.Pop() : Create(position, rotation);
+        return Show(Vector3.zero, Quaternion.identity, local, time);
+    }
+
+    public T Show(Vector3 position, bool local = false, float time = 0)
+    {
+        return Show(position, Quaternion.identity, local, time);
+    }
+
+    public T Show(Vector3 position, Quaternion rotation, bool local = false, float time = 0)
+    {
+        T item = STACK.Count > 0 ? STACK.Pop() : Create();
         item.Obj.SetActive(true);
-        item.Tr.position = position;
-        item.Tr.rotation = rotation;
-        if (time != 0)
-        {
-            EntryPoint.Mono.StartCoroutine(TimerHideCoroutine(item, time));
-        }
+        if (local) item.Tr.SetLocalPositionAndRotation(position, rotation);
+        else item.Tr.SetPositionAndRotation(position, rotation);
+
+        if (time == 0) return item;
+        if (item.HideCoroutine != null)
+            EntryPoint.Mono.StopCoroutine(item.HideCoroutine);
+        item.HideCoroutine = EntryPoint.Mono.StartCoroutine(TimerHideCoroutine(item, time));
+
         return item;
     }
 
@@ -41,13 +73,21 @@ public class PoolStack<T> where T : MonoBehaviour, IPooling<T>
         yield return WaitForPausedSeconds(time);
         Hide(item);
     }
+
     public void Hide(T item)
     {
+        if (!item) return;
         item.Obj.SetActive(false);
         STACK.Push(item);
     }
 
-    public void Clear()
+    public void Destroy()
+    {
+        OnDestroy?.Invoke();
+        STACK.Clear();
+    }
+
+    public void HideAll()
     {
         OnClear?.Invoke();
     }

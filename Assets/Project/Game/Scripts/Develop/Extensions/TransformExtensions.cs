@@ -5,39 +5,26 @@ public static class TransformExtensions
     public static void SetLocal(this Transform tr, Vector3? position = null, Quaternion? rotation = null,
         Vector3? scale = null)
     {
-        if (position != null)
-        {
-            tr.localPosition = (Vector3)position;
-        }
+        if (position != null) tr.localPosition = (Vector3)position;
 
-        if (rotation != null)
-        {
-            tr.localRotation = (Quaternion)rotation;
-        }
+        if (rotation != null) tr.localRotation = (Quaternion)rotation;
 
-        if (scale != null)
-        {
-            tr.localScale = (Vector3)scale;
-        }
+        if (scale != null) tr.localScale = (Vector3)scale;
     }
+
     public static void Clear(this Transform transform)
     {
-        if (transform.childCount == 0)
-        {
-            return;
-        }
+        if (transform.childCount == 0) return;
 
         for (int idChild = 0; idChild < transform.childCount; idChild++)
-        {
             if (Application.isEditor)
                 Object.DestroyImmediate(transform.GetChild(idChild).gameObject);
             else
                 Object.Destroy(transform.GetChild(idChild).gameObject);
-        }
     }
-    
+
     /// <summary>
-    /// Получить угол слежения за целью только по оси Y
+    ///     Получить угол слежения за целью только по оси Y
     /// </summary>
     /// <param name="transform">следящий</param>
     /// <param name="target">цель</param>
@@ -52,7 +39,7 @@ public static class TransformExtensions
     }
 
     /// <summary>
-    /// Следить за целью только по оси Y
+    ///     Следить за целью только по оси Y
     /// </summary>
     /// <param name="transform">следящий</param>
     /// <param name="target">цель</param>
@@ -63,7 +50,7 @@ public static class TransformExtensions
     }
 
     /// <summary>
-    /// Следить за целью (2D версия)
+    ///     Следить за целью (2D версия)
     /// </summary>
     /// <param name="transform">следящий</param>
     /// <param name="target">цель</param>
@@ -74,7 +61,7 @@ public static class TransformExtensions
         float angle = Vector2.SignedAngle(Vector2.right, direction);
         _ = transform.SetAngleZ(angle, localAngle);
     }
-    
+
     public static void SetInsideBorders(this Transform tr, (Vector2 min, Vector2 max) point)
     {
         Vector3 position = tr.position;
@@ -84,6 +71,7 @@ public static class TransformExtensions
         if (point.max.x < position.x) tr.SetPositionX(point.max.x);
         if (point.max.y < position.y) tr.SetPositionY(point.max.y);
     }
+
     public static void SetInsideBorders3D(this Transform tr, (Vector2 min, Vector2 max) point)
     {
         Vector3 position = tr.position;
@@ -92,5 +80,39 @@ public static class TransformExtensions
         if (point.min.y > position.z) tr.SetPositionZ(point.min.y);
         if (point.max.x < position.x) tr.SetPositionX(point.max.x);
         if (point.max.y < position.z) tr.SetPositionZ(point.max.y);
+    }
+
+    public static Transform FindDeepChild(this Transform parent, string name, int countSkip = 0)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+
+            Transform result = FindDeepChild(child, name, ref countSkip);
+            if (!result) continue;
+            if (countSkip == 0)
+                return result;
+            countSkip--;
+        }
+
+        return null;
+    }
+
+    private static Transform FindDeepChild(this Transform parent, string name, ref int countSkip)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+
+            Transform result = FindDeepChild(child, name, ref countSkip);
+            if (!result) continue;
+            if (countSkip == 0)
+                return result;
+            countSkip--;
+        }
+
+        return null;
     }
 }

@@ -1,59 +1,50 @@
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public static class DebugExtensions
 {
     /// <summary>
-    /// Метод визуализации массива
-    /// </summary> 
+    ///     Метод визуализации массива
+    /// </summary>
     /// <returns>Строка визуализации</returns>
     public static string Show<T>(this T[] arr, string separator = "\t")
     {
-        if (arr.Length == 0)
-        {
-            return null;
-        }
+        if (arr.Length == 0) return null;
 
         string str = "";
         str += arr[0];
         if (arr.Length > 1)
-        {
             for (int i = 1; i < arr.Length; i++)
-            {
                 str += separator + arr[i];
-            }
-        }
 
         return str;
     }
+
     /// <summary>
-    /// Метод визуализации списка
-    /// </summary> 
+    ///     Метод визуализации списка
+    /// </summary>
     /// <returns>Строка визуализации</returns>
     public static string Show<T>(this List<T> list, string separator = "\t")
     {
-        if (list.Count == 0)
-        {
-            return null;
-        }
+        if (list.Count == 0) return null;
 
         string str = "";
         str += list[0];
         if (list.Count > 1)
-        {
             for (int i = 1; i < list.Count; i++)
-            {
                 str += separator + list[i];
-            }
-        }
 
         return str;
     }
+
     /// <summary>
-    /// Метод визуализации 2D массива
+    ///     Метод визуализации 2D массива
     /// </summary>
     /// <returns>Строка визуализации</returns>
     public static string Show<T>(this T[,] arr)
@@ -61,16 +52,14 @@ public static class DebugExtensions
         string str = "";
         for (int x = 0; x < arr.GetLength(0); x++)
         {
-            for (int y = 0; y < arr.GetLength(1); y++)
-            {
-                str += arr[x, y] + "\t";
-            }
+            for (int y = 0; y < arr.GetLength(1); y++) str += arr[x, y] + "\t";
 
             str += "\n";
         }
 
         return str;
     }
+
     public static string GetCode<T>(this T value, bool copy = false)
     {
         string typeName = GetCSharpTypeName(typeof(T));
@@ -81,18 +70,16 @@ public static class DebugExtensions
             GUIUtility.systemCopyBuffer = code;
         return code;
     }
+
     public static string GetCode<T>(this T[] values, bool copy = false)
     {
         string typeName = GetCSharpTypeName(typeof(T));
         if (values == null) return $"{typeName}[] values = null;";
 
         int len = values.Length;
-        var items = new List<string>(len);
+        List<string> items = new(len);
 
-        for (int i = 0; i < len; i++)
-        {
-            items.Add(ToLiteral(values[i], typeof(T), typeName));
-        }
+        for (int i = 0; i < len; i++) items.Add(ToLiteral(values[i], typeof(T), typeName));
 
         string body = string.Join(", ", items);
         string code = $"{typeName}[] value = new[] {{ {body} }};";
@@ -100,6 +87,7 @@ public static class DebugExtensions
             GUIUtility.systemCopyBuffer = code;
         return code;
     }
+
     public static string GetCode<T>(this T[,] values, bool copy = false)
     {
         string typeName = GetCSharpTypeName(typeof(T));
@@ -107,15 +95,12 @@ public static class DebugExtensions
 
         int rows = values.GetLength(0);
         int cols = values.GetLength(1);
-        var rowStrings = new List<string>(rows);
+        List<string> rowStrings = new(rows);
 
         for (int i = 0; i < rows; i++)
         {
-            var cellLits = new List<string>(cols);
-            for (int j = 0; j < cols; j++)
-            {
-                cellLits.Add(ToLiteral(values[i, j], typeof(T), typeName));
-            }
+            List<string> cellLits = new(cols);
+            for (int j = 0; j < cols; j++) cellLits.Add(ToLiteral(values[i, j], typeof(T), typeName));
             rowStrings.Add("{ " + string.Join(", ", cellLits) + " }");
         }
 
@@ -131,10 +116,8 @@ public static class DebugExtensions
         if (value is null) return "null";
 
         if (valueType.IsEnum)
-        {
             // Enum representation: EnumType.Value
             return $"{valueType.FullName ?? valueType.Name}.{value}";
-        }
 
         switch (Type.GetTypeCode(valueType))
         {
@@ -143,7 +126,7 @@ public static class DebugExtensions
             case TypeCode.Char:
                 return $"'{EscapeChar((char)value)}'";
             case TypeCode.Boolean:
-                return ((bool)value) ? "true" : "false";
+                return (bool)value ? "true" : "false";
             case TypeCode.Single: // float
                 return ((float)value).ToString(CultureInfo.InvariantCulture) + "f";
             case TypeCode.Double:
@@ -199,7 +182,6 @@ public static class DebugExtensions
         if (s == null) return "";
         StringBuilder sb = new();
         foreach (char c in s)
-        {
             switch (c)
             {
                 case '\\': sb.Append(@"\\"); break;
@@ -211,7 +193,7 @@ public static class DebugExtensions
                     sb.Append(c);
                     break;
             }
-        }
+
         return sb.ToString();
     }
 
@@ -227,5 +209,27 @@ public static class DebugExtensions
             _ => c.ToString()
         };
     }
-    
+
+    // ReSharper disable once MemberCanBePrivate.Global
+    public static TimeSpan TestTime(Action method, int count = 1)
+    {
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
+        for (int id = 0; id < count; id++)
+            method?.Invoke();
+        stopwatch.Stop();
+        TimeSpan elapsed = stopwatch.Elapsed;
+        Debug.Log($"Метод {method.GetMethodInfo().Name} выполнялся: {elapsed.ToString()} времени и {count} раз");
+        return elapsed;
+    }
+
+    public static void CompareTestTimes(Action method1, Action method2, int count = 1)
+    {
+        TimeSpan span1 = TestTime(method1, count);
+        TimeSpan span2 = TestTime(method2, count);
+        Debug.Log(
+            span1.TotalMilliseconds < span2.TotalMilliseconds
+                ? $"Метод {method1.GetMethodInfo().Name} выполнялся в {span2.TotalMilliseconds / span1.TotalMilliseconds} раз быстрее"
+                : $"Метод {method2.GetMethodInfo().Name} выполнялся в {span1.TotalMilliseconds / span2.TotalMilliseconds} раз быстрее");
+    }
 }
